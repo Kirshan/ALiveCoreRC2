@@ -167,6 +167,7 @@ int Master::Run()
         do
         {
 			std::string alive[2];
+			// Not needet yet !!
 			//alive[0] = "Norganon PVE/P";
 			//alive[1] = "178.63.89.20";
 
