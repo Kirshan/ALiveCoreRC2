@@ -127,6 +127,18 @@ class boss_rotface : public CreatureScript
                 Talk(SAY_DEATH);
                 if (Creature* professor = Unit::GetCreature(*me, instance->GetData64(DATA_PROFESSOR_PUTRICIDE)))
                     professor->AI()->DoAction(ACTION_ROTFACE_DEATH);
+
+				//Shiro
+                Map *pMap = me->GetMap();
+                if(pMap && pMap->IsDungeon())
+                {
+                    Map::PlayerList const &players = pMap->GetPlayers();
+                    for (Map::PlayerList::const_iterator itr = players.begin(); itr != players.end(); ++itr)
+                    {
+                        itr->getSource()->RemoveAura(MUTATED_INFECTION);
+                    }
+                }
+                //Shiro
             }
 
             void JustReachedHome()
