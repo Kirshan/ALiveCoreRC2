@@ -126,8 +126,8 @@ int Master::Run()
     sLog->outString("%s (worldserver-daemon)", _FULLVERSION);
     sLog->outString("<Ctrl-C> to stop.\n");
 
-    sLog->outString(" _______";
-	sLog->outString("/\      \\    \\          \\                  _______");
+    sLog->outString(" _______");
+	sLog->outString("/\      \\    \\         \\                   _______");
     sLog->outString("\ \      \\    \\                \\    //     \\    \\");
     sLog->outString(" \ \______\\    \\         \\     \\  //       \\____\\");
     sLog->outString("  \ \      \\    \\_____    \\     \\//         \\_______      C O R E");
