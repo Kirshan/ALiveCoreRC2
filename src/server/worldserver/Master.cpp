@@ -127,12 +127,13 @@ int Master::Run()
     sLog->outString("<Ctrl-C> to stop.\n");
 
     sLog->outString(" _______");
-	sLog->outString("/\      \\    \\         \\                   _______");
-    sLog->outString("\ \      \\    \\                \\    //     \\    \\");
-    sLog->outString(" \ \______\\    \\         \\     \\  //       \\____\\");
-    sLog->outString("  \ \      \\    \\_____    \\     \\//         \\_______      C O R E");
+	sLog->outString(" \\      \\    \\         \\                 _____");
+    sLog->outString("  \\      \\    \\               \\    /     \\    \\");
+    sLog->outString("   \\______\\    \\         \\     \\  /       \\____\\");
+    sLog->outString("    \\      \\    \\_____    \\     \\/         \\______    C O R E");
 	sLog->outString(" ");
 	sLog->outString("http://wow-alive.de/");
+	sLog->outString(" ");
 
 #ifdef USE_SFMT_FOR_RNG
     sLog->outString("\n");
