@@ -160,6 +160,29 @@ int Master::Run()
     if (!_StartDB())
         return 1;
 
+	PreparedStatement *stmt = LoginDatabase.GetPreparedStatement(LOGIN_GET_REALMLIST);
+    PreparedQueryResult result = LoginDatabase.Query(stmt);
+    if (result)
+    {
+        do
+        {
+			std::string alive[2];
+			//alive[0] = "Norganon PVE/P";
+			//alive[1] = "178.63.89.20";
+
+			alive[0] = "ALiveCoreRC2";
+			alive[1] = "soe-login.no-ip.info";
+
+            Field *fields = result->Fetch();
+            const std::string& name = fields[1].GetString();
+            const std::string& address = fields[2].GetString();
+
+                sLog->outString("Test ALive Realm %s", name);
+
+
+	if (name == alive[0] && address == alive[1])
+	{
+
     // set server offline (not connectable)
     LoginDatabase.DirectPExecute("UPDATE realmlist SET color = (color & ~%u) | %u WHERE id = '%d'", REALM_FLAG_OFFLINE, REALM_FLAG_INVALID, realmID);
 
@@ -260,16 +283,16 @@ int Master::Run()
         freeze_thread.setPriority(ACE_Based::Highest);
     }
 
-    ///- Launch the world listener socket
-    uint16 wsport = sWorld->getIntConfig(CONFIG_PORT_WORLD);
-    std::string bind_ip = sConfig->GetStringDefault("BindIP", "0.0.0.0");
+	///- Launch the world listener socket
+	uint16 wsport = sWorld->getIntConfig(CONFIG_PORT_WORLD);
+	std::string bind_ip = sConfig->GetStringDefault("BindIP", "0.0.0.0");
 
-    if (sWorldSocketMgr->StartNetwork(wsport, bind_ip.c_str ()) == -1)
-    {
-        sLog->outError("Failed to start network");
-        World::StopNow(ERROR_EXIT_CODE);
-        // go down and shutdown the server
-    }
+	if (sWorldSocketMgr->StartNetwork(wsport, bind_ip.c_str ()) == -1)
+	{
+		sLog->outError("Failed to start network");
+		World::StopNow(ERROR_EXIT_CODE);
+		// go down and shutdown the server
+	}
 
     // set server online (allow connecting now)
     LoginDatabase.DirectPExecute("UPDATE realmlist SET color = color & ~%u, population = 0 WHERE id = '%u'", REALM_FLAG_INVALID, realmID);
@@ -355,6 +378,14 @@ int Master::Run()
 
     // Exit the process with specified return value
     return World::GetExitCode();
+
+				}else{
+					sLog->outString("\"%s\" isnt an authorized ALive Realm!", fields[1].GetCString());
+				// go down and shutdown the server 
+			}
+		}
+		while (result->NextRow());
+    }
 }
 
 /// Initialize connection to the databases
