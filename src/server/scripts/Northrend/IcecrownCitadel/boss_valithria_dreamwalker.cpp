@@ -633,20 +633,96 @@ class npc_the_lich_king_controller : public CreatureScript
                 {
                     switch (eventId)
                     {
+						uint32 rand = urand(1, 4);
                         case EVENT_GLUTTONOUS_ABOMINATION_SUMMONER:
-                            DoCast(me, SPELL_TIMER_GLUTTONOUS_ABOMINATION);
+                            //DoCast(me, SPELL_TIMER_GLUTTONOUS_ABOMINATION);
+							switch (rand)
+							{
+								case 1:
+									me->SummonCreature(NPC_GLUTTONOUS_ABOMINATION, 4243.304199f, 2571.607910f, 364.868011f);
+									break;
+								case 2:
+									me->SummonCreature(NPC_GLUTTONOUS_ABOMINATION, 4241.145020f,2401.896484f,364.867981f);
+									break;
+								case 3:
+									me->SummonCreature(NPC_GLUTTONOUS_ABOMINATION, 4241.145020f,2401.896484f,364.867981f);
+									break;
+								case 4:
+									me->SummonCreature(NPC_GLUTTONOUS_ABOMINATION, 4243.304199f, 2571.607910f, 364.868011f);
+									break;
+							}
                             break;
                         case EVENT_SUPPRESSER_SUMMONER:
-                            DoCast(me, SPELL_TIMER_SUPPRESSER);
+                            //DoCast(me, SPELL_TIMER_SUPPRESSER);
+							switch (rand)
+							{
+								case 1:
+									me->SummonCreature(NPC_SUPPRESSER, 4243.304199f, 2571.607910f, 364.868011f);
+									break;
+								case 2:
+									me->SummonCreature(NPC_SUPPRESSER, 4241.145020f,2401.896484f,364.867981f);
+									break;
+								case 3:
+									me->SummonCreature(NPC_SUPPRESSER, 4241.145020f,2401.896484f,364.867981f);
+									break;
+								case 4:
+									me->SummonCreature(NPC_SUPPRESSER, 4243.304199f, 2571.607910f, 364.868011f);
+									break;
+							}
                             break;
                         case EVENT_BLISTERING_ZOMBIE_SUMMONER:
-                            DoCast(me, SPELL_TIMER_BLISTERING_ZOMBIE);
+                            //DoCast(me, SPELL_TIMER_BLISTERING_ZOMBIE);
+							switch (rand)
+							{
+								case 1:
+									me->SummonCreature(NPC_BLISTERING_ZOMBIE, 4243.304199f, 2571.607910f, 364.868011f);
+									break;
+								case 2:
+									me->SummonCreature(NPC_BLISTERING_ZOMBIE, 4241.145020f,2401.896484f,364.867981f);
+									break;
+								case 3:
+									me->SummonCreature(NPC_BLISTERING_ZOMBIE, 4241.145020f,2401.896484f,364.867981f);
+									break;
+								case 4:
+									me->SummonCreature(NPC_BLISTERING_ZOMBIE, 4243.304199f, 2571.607910f, 364.868011f);
+									break;
+							}
                             break;
                         case EVENT_RISEN_ARCHMAGE_SUMMONER:
-                            DoCast(me, SPELL_TIMER_RISEN_ARCHMAGE);
+                            //DoCast(me, SPELL_TIMER_RISEN_ARCHMAGE);
+							switch (rand)
+							{
+								case 1:
+									me->SummonCreature(NPC_RISEN_ARCHMAGE, 4243.304199f, 2571.607910f, 364.868011f);
+									break;
+								case 2:
+									me->SummonCreature(NPC_RISEN_ARCHMAGE, 4241.145020f,2401.896484f,364.867981f);
+									break;
+								case 3:
+									me->SummonCreature(NPC_RISEN_ARCHMAGE, 4241.145020f,2401.896484f,364.867981f);
+									break;
+								case 4:
+									me->SummonCreature(NPC_RISEN_ARCHMAGE, 4243.304199f, 2571.607910f, 364.868011f);
+									break;
+							}
                             break;
                         case EVENT_BLAZING_SKELETON_SUMMONER:
-                            DoCast(me, SPELL_TIMER_BLAZING_SKELETON);
+                            //DoCast(me, SPELL_TIMER_BLAZING_SKELETON);
+							switch (rand)
+							{
+								case 1:
+									me->SummonCreature(NPC_BLAZING_SKELETON, 4243.304199f, 2571.607910f, 364.868011f);
+									break;
+								case 2:
+									me->SummonCreature(NPC_BLAZING_SKELETON, 4241.145020f,2401.896484f,364.867981f);
+									break;
+								case 3:
+									me->SummonCreature(NPC_BLAZING_SKELETON, 4241.145020f,2401.896484f,364.867981f);
+									break;
+								case 4:
+									me->SummonCreature(NPC_BLAZING_SKELETON, 4243.304199f, 2571.607910f, 364.868011f);
+									break;
+							}
                             break;
                         default:
                             break;
