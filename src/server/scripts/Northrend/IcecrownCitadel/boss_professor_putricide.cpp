@@ -811,9 +811,9 @@ class spell_putricide_ooze_channel : public SpellScriptLoader
 
             void Register()
             {
-                OnUnitTargetSelect += SpellUnitTargetFn(spell_putricide_ooze_channel_SpellScript::SelectTarget, EFFECT_0, TARGET_UNIT_AREA_ENEMY_SRC);
-                OnUnitTargetSelect += SpellUnitTargetFn(spell_putricide_ooze_channel_SpellScript::SetTarget, EFFECT_1, TARGET_UNIT_AREA_ENEMY_SRC);
-                OnUnitTargetSelect += SpellUnitTargetFn(spell_putricide_ooze_channel_SpellScript::SetTarget, EFFECT_2, TARGET_UNIT_AREA_ENEMY_SRC);
+                OnUnitTargetSelect += SpellUnitTargetFn(spell_putricide_ooze_channel_SpellScript::SelectTarget, EFFECT_0, TARGET_UNIT_SRC_AREA_ENEMY);
+                OnUnitTargetSelect += SpellUnitTargetFn(spell_putricide_ooze_channel_SpellScript::SetTarget, EFFECT_1, TARGET_UNIT_SRC_AREA_ENEMY);
+                OnUnitTargetSelect += SpellUnitTargetFn(spell_putricide_ooze_channel_SpellScript::SetTarget, EFFECT_2, TARGET_UNIT_SRC_AREA_ENEMY);
                 AfterHit += SpellHitFn(spell_putricide_ooze_channel_SpellScript::StartAttack);
             }
 
@@ -840,6 +840,13 @@ class spell_putricide_expunged_gas : public SpellScriptLoader
                 return GetCaster()->GetTypeId() == TYPEID_UNIT && GetCaster()->GetInstanceScript();
             }
 
+            SpellCastResult CheckCast()
+            {
+                if (!GetCaster()->getVictim())
+                    return SPELL_FAILED_NO_VALID_TARGETS;
+                return SPELL_CAST_OK;
+            }
+
             void CalcDamage(SpellEffIndex /*effIndex*/)
             {
                 // checked in script loading, cant be NULL here
@@ -850,7 +857,7 @@ class spell_putricide_expunged_gas : public SpellScriptLoader
 
                 int32 dmg = 0;
                 uint32 bloatId = sSpellMgr->GetSpellIdForDifficulty(SPELL_GASEOUS_BLOAT, GetCaster());
-                if (Aura* gasBloat = GetTargetUnit()->GetAura(bloatId))
+                if (Aura* gasBloat = GetCaster()->getVictim()->GetAura(bloatId))
                 {
                     uint32 stack = gasBloat->GetStackAmount();
                     int32 const mod = (GetCaster()->GetMap()->GetSpawnMode() & 1) ? 1500 : 1250;
@@ -868,6 +875,7 @@ class spell_putricide_expunged_gas : public SpellScriptLoader
 
             void Register()
             {
+                OnCheckCast += SpellCheckCastFn(spell_putricide_expunged_gas_SpellScript::CheckCast);
                 OnEffect += SpellEffectFn(spell_putricide_expunged_gas_SpellScript::CalcDamage, EFFECT_0, SPELL_EFFECT_SCHOOL_DAMAGE);
                 AfterHit += SpellHitFn(spell_putricide_expunged_gas_SpellScript::DespawnAfterCast);
             }
@@ -1006,7 +1014,7 @@ class spell_putricide_ooze_summon : public SpellScriptLoader
                     z = GetTarget()->GetMap()->GetHeight(x, y, z, true, 25.0f);
                     x += 10.0f * cosf(caster->GetOrientation());
                     y += 10.0f * sinf(caster->GetOrientation());
-                    caster->CastSpell(x, y, z, triggerSpellId, true, NULL, NULL, GetCasterGUID(), caster);
+                    caster->CastSpell(x, y, z, triggerSpellId, true, NULL, NULL, GetCasterGUID());
                 }
             }
 
@@ -1192,7 +1200,7 @@ class spell_putricide_eat_ooze : public SpellScriptLoader
             void Register()
             {
                 OnEffect += SpellEffectFn(spell_putricide_eat_ooze_SpellScript::HandleScript, EFFECT_0, SPELL_EFFECT_SCRIPT_EFFECT);
-                OnUnitTargetSelect += SpellUnitTargetFn(spell_putricide_eat_ooze_SpellScript::SelectTarget, EFFECT_0, TARGET_UNIT_AREA_ENTRY_DST);
+                OnUnitTargetSelect += SpellUnitTargetFn(spell_putricide_eat_ooze_SpellScript::SelectTarget, EFFECT_0, TARGET_UNIT_DEST_AREA_ENTRY);
             }
         };
 
@@ -1384,11 +1392,11 @@ class spell_putricide_mutated_transformation : public SpellScriptLoader
                 if (!caster)
                     return;
 
-                InstanceScript* instance = GetTargetUnit()->GetInstanceScript();
+                InstanceScript* instance = caster->GetInstanceScript();
                 if (!instance)
                     return;
 
-                Creature* putricide = ObjectAccessor::GetCreature(*GetTargetUnit(), instance->GetData64(DATA_PROFESSOR_PUTRICIDE));
+                Creature* putricide = ObjectAccessor::GetCreature(*caster, instance->GetData64(DATA_PROFESSOR_PUTRICIDE));
                 if (!putricide)
                     return;
 
@@ -1432,29 +1440,29 @@ class spell_putricide_mutated_transformation : public SpellScriptLoader
 
 class spell_putricide_mutated_transformation_dmg : public SpellScriptLoader
 {
-public:
-    spell_putricide_mutated_transformation_dmg() : SpellScriptLoader("spell_putricide_mutated_transformation_dmg") { }
+    public:
+        spell_putricide_mutated_transformation_dmg() : SpellScriptLoader("spell_putricide_mutated_transformation_dmg") { }
 
-    class spell_putricide_mutated_transformation_dmg_SpellScript : public SpellScript
-    {
-        PrepareSpellScript(spell_putricide_mutated_transformation_dmg_SpellScript);
-
-        void FilterTargetsInitial(std::list<Unit*>& unitList)
+        class spell_putricide_mutated_transformation_dmg_SpellScript : public SpellScript
         {
-            if (Unit* owner = ObjectAccessor::GetUnit(*GetCaster(), GetCaster()->GetCreatorGUID()))
-                unitList.remove(owner);
-        }
+            PrepareSpellScript(spell_putricide_mutated_transformation_dmg_SpellScript);
 
-        void Register()
+            void FilterTargetsInitial(std::list<Unit*>& unitList)
+            {
+                if (Unit* owner = ObjectAccessor::GetUnit(*GetCaster(), GetCaster()->GetCreatorGUID()))
+                    unitList.remove(owner);
+            }
+
+            void Register()
+            {
+                OnUnitTargetSelect += SpellUnitTargetFn(spell_putricide_mutated_transformation_dmg_SpellScript::FilterTargetsInitial, EFFECT_0, TARGET_UNIT_SRC_AREA_ALLY);
+            }
+        };
+
+        SpellScript* GetSpellScript() const
         {
-            OnUnitTargetSelect += SpellUnitTargetFn(spell_putricide_mutated_transformation_dmg_SpellScript::FilterTargetsInitial, EFFECT_0, TARGET_UNIT_AREA_ALLY_SRC);
+            return new spell_putricide_mutated_transformation_dmg_SpellScript();
         }
-    };
-
-    SpellScript* GetSpellScript() const
-    {
-        return new spell_putricide_mutated_transformation_dmg_SpellScript();
-    }
 };
 
 class spell_putricide_regurgitated_ooze : public SpellScriptLoader
