@@ -126,11 +126,13 @@ int Master::Run()
     sLog->outString("%s (worldserver-daemon)", _FULLVERSION);
     sLog->outString("<Ctrl-C> to stop.\n");
 
-    sLog->outString(" _______");
-	sLog->outString(" \\      \\    \\         \\                 _____");
-    sLog->outString("  \\      \\    \\               \\    /     \\    \\");
-    sLog->outString("   \\______\\    \\         \\     \\  /       \\____\\");
-    sLog->outString("    \\      \\    \\_____    \\     \\/         \\______    C O R E");
+    sLog->outString("    _    _     _           ");
+    sLog->outString("   / \  | |   (_)_   _____ ");
+    sLog->outString("  / _ \ | |   | \ \ / / _ \");
+    sLog->outString(" / ___ \| |___| |\ V /  __/");
+    sLog->outString("/_/   \_\_____|_| \_/ \___|");
+    sLog->outString("C O R E");
+
 	sLog->outString(" ");
 	sLog->outString("http://wow-alive.de/");
 	sLog->outString(" ");
