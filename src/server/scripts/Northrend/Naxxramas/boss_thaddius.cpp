@@ -137,6 +137,14 @@ public:
         bool checkFeugenAlive;
         uint32 uiAddsTimer;
 
+		void Reset()
+		{
+			me->SummonCreature(15929, 3450.449951f, -2931.419922f, 312.091003f); // Stalagg
+			me->SummonCreature(15930, 3508.139893f, -2988.649902f, 312.092010f); // Feugen
+			me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_OOC_NOT_ATTACKABLE | UNIT_FLAG_NOT_SELECTABLE | UNIT_FLAG_STUNNED);
+            me->SetReactState(REACT_PASSIVE);
+		}
+
         void KilledUnit(Unit* /*victim*/)
         {
             if (!(rand()%5))
