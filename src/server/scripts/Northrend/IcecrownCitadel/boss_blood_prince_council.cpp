@@ -1256,7 +1256,7 @@ class npc_kinetic_bomb : public CreatureScript
                 else if (action == ACTION_KINETIC_BOMB_JUMP)
                 {
                     me->GetMotionMaster()->Clear();
-                    me->GetMotionMaster()->MoveJump(_x, _y, me->GetPositionZ() + 7.0f, 1.0f, 7.0f);
+                    me->GetMotionMaster()->MoveJump(_x, _y, _groundZ, 1.0f, 7.0f);
                     _events.ScheduleEvent(EVENT_CONTINUE_FALLING, 700);
                 }
             }
