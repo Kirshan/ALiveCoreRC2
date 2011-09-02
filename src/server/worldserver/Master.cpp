@@ -127,10 +127,10 @@ int Master::Run()
     sLog->outString("<Ctrl-C> to stop.\n");
 
     sLog->outString("    _    _     _           ");
-    sLog->outString("   / \  | |   (_)_   _____ ");
-    sLog->outString("  / _ \ | |   | \ \ / / _ \");
-    sLog->outString(" / ___ \| |___| |\ V /  __/");
-    sLog->outString("/_/   \_\_____|_| \_/ \___|");
+    sLog->outString("   / \\  | |   (_)_   _____ ");
+    sLog->outString("  / _ \\ | |   | \\ \\ / / _ \\");
+    sLog->outString(" / ___ \\| |___| |\\ V /  __/");
+    sLog->outString("/_/   \\_\\_____|_| \\_/ \\___|");
     sLog->outString("C O R E");
 
 	sLog->outString(" ");
