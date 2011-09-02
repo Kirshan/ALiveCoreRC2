@@ -5456,6 +5456,20 @@ SpellCastResult Spell::CheckCast(bool strict)
                     return SPELL_FAILED_BAD_TARGETS;
 
                 // check if our map is dungeon
+				// Need to Add Block When Caster and Target Instancebind are not Same or Null
+				if (sMapStore.LookupEntry(m_caster->GetMapId())->IsDungeon())
+				{
+					Map const* pMap = m_caster->GetMap();
+					InstanceTemplate const* instance = sObjectMgr->GetInstanceTemplate(pMap->GetId());
+					if (!instance)
+                         return SPELL_FAILED_TARGET_NOT_IN_INSTANCE;
+
+				    if (!target->Satisfy(sObjectMgr->GetAccessRequirement(pMap->GetId(), pMap->GetDifficulty()), pMap->GetId()))
+						return SPELL_FAILED_BAD_TARGETS;
+				}
+
+
+				/*
                 MapEntry const* map = sMapStore.LookupEntry(m_caster->GetMapId());
                 if (map->IsDungeon())
                 {
@@ -5472,6 +5486,7 @@ SpellCastResult Spell::CheckCast(bool strict)
                     if (!target->Satisfy(sObjectMgr->GetAccessRequirement(mapId, difficulty), mapId))
                         return SPELL_FAILED_BAD_TARGETS;
                 }
+				*/
                 break;
             }
             // RETURN HERE
