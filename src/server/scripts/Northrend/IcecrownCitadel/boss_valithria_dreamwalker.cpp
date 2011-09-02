@@ -631,10 +631,12 @@ class npc_the_lich_king_controller : public CreatureScript
 
                 while (uint32 eventId = _events.ExecuteEvent())
                 {
+					uint32 rand = urand(1, 4);
+
                     switch (eventId)
                     {
-						uint32 rand = urand(1, 4);
                         case EVENT_GLUTTONOUS_ABOMINATION_SUMMONER:
+						{
                             //DoCast(me, SPELL_TIMER_GLUTTONOUS_ABOMINATION);
 							switch (rand)
 							{
@@ -652,7 +654,9 @@ class npc_the_lich_king_controller : public CreatureScript
 									break;
 							}
                             break;
+						}
                         case EVENT_SUPPRESSER_SUMMONER:
+						{
                             //DoCast(me, SPELL_TIMER_SUPPRESSER);
 							switch (rand)
 							{
@@ -670,7 +674,9 @@ class npc_the_lich_king_controller : public CreatureScript
 									break;
 							}
                             break;
+						}
                         case EVENT_BLISTERING_ZOMBIE_SUMMONER:
+						{
                             //DoCast(me, SPELL_TIMER_BLISTERING_ZOMBIE);
 							switch (rand)
 							{
@@ -688,7 +694,9 @@ class npc_the_lich_king_controller : public CreatureScript
 									break;
 							}
                             break;
+						}
                         case EVENT_RISEN_ARCHMAGE_SUMMONER:
+						{
                             //DoCast(me, SPELL_TIMER_RISEN_ARCHMAGE);
 							switch (rand)
 							{
@@ -706,7 +714,9 @@ class npc_the_lich_king_controller : public CreatureScript
 									break;
 							}
                             break;
+						}
                         case EVENT_BLAZING_SKELETON_SUMMONER:
+						{
                             //DoCast(me, SPELL_TIMER_BLAZING_SKELETON);
 							switch (rand)
 							{
@@ -724,6 +734,7 @@ class npc_the_lich_king_controller : public CreatureScript
 									break;
 							}
                             break;
+						}
                         default:
                             break;
                     }
