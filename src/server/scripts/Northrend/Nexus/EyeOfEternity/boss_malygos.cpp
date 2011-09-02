@@ -242,6 +242,9 @@ public:
             me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
 
             cannotMove = true;
+
+			me->SetFlying(true);
+			me->AddUnitMovementFlag(MOVEMENTFLAG_LEVITATING);
         }
 
         uint32 GetData(uint32 data)
@@ -296,6 +299,8 @@ public:
             SetPhase(PHASE_THREE, true);
 
             // this despawns Hover Disks
+			me->SetFlying(true);
+			me->AddUnitMovementFlag(MOVEMENTFLAG_LEVITATING);
             summons.DespawnAll();
             // players that used Hover Disk are no in the aggro list
             me->SetInCombatWithZone();
@@ -335,6 +340,8 @@ public:
                     events.ScheduleEvent(EVENT_YELL_1, 24*IN_MILLISECONDS, 0, _phase);
                     events.ScheduleEvent(EVENT_SURGE_POWER, urand(60, 70)*IN_MILLISECONDS, 0, _phase);
                     events.ScheduleEvent(EVENT_SUMMON_ARCANE, urand(2, 5)*IN_MILLISECONDS, 0, _phase);
+					me->SetFlying(true);
+			        me->AddUnitMovementFlag(MOVEMENTFLAG_LEVITATING);
                     break;
                 case PHASE_THREE:
                     events.ScheduleEvent(EVENT_YELL_2, 0, 0, _phase);
@@ -352,7 +359,8 @@ public:
         {
             _EnterCombat();
 
-            me->RemoveUnitMovementFlag(MOVEMENTFLAG_LEVITATING);
+            me->SetFlying(false);
+			me->RemoveUnitMovementFlag(MOVEMENTFLAG_LEVITATING);
             me->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
 
             Talk(SAY_AGGRO_P_ONE);
