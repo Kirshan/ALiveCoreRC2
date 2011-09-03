@@ -678,7 +678,7 @@ public:
         void UpdateAI(const uint32 uiDiff)
         {
             Unit* target = Unit::GetPlayer(*me, m_uiTargetGUID);
-            if (!target || !target->isAlive() || !target->HasAura(SPELL_MARK))
+            if (!target || !target->isAlive() || !target->HasAura(SPELL_MARK) || target->isTotem())
             {
                 if (Creature* pAnubarak = Unit::GetCreature((*me), m_pInstance->GetData64(NPC_ANUBARAK)))
                     pAnubarak->CastSpell(pAnubarak, SPELL_SPIKE_TELE, false);
