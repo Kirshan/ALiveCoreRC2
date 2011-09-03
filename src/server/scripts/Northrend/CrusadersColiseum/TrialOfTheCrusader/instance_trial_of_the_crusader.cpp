@@ -44,6 +44,8 @@ class instance_trial_of_the_crusader : public InstanceMapScript
             std::string SaveDataBuffer;
             bool   NeedSave;
 
+			uint32 ChampionCount;
+
             uint32 DataDamageTwin;
             uint32 FjolaCasting;
             uint32 EydisCasting;
@@ -96,6 +98,8 @@ class instance_trial_of_the_crusader : public InstanceMapScript
                 WebDoorGUID = 0;
 
                 NorthrendBeasts = NOT_STARTED;
+
+				ChampionCount = 0;
 
                 EventTimer = 1000;
 
@@ -241,6 +245,12 @@ class instance_trial_of_the_crusader : public InstanceMapScript
             {
                 switch (type)
                 {
+					case DATA_FACTION_CHAMPIONS:
+						if (ChampionCount < 5)
+						ChampionCount++;
+						else if (ChampionCount == 5)
+							SetData(TYPE_CRUSADERS,DONE);
+						break;
                     case TYPE_JARAXXUS:
                         if (data == DONE)
                             EventStage = 2000;
@@ -476,6 +486,9 @@ class instance_trial_of_the_crusader : public InstanceMapScript
             {
                 switch (type)
                 {
+					case DATA_FACTION_CHAMPIONS:
+						return ChampionCount;
+						break;
                     case TYPE_BEASTS:
                         return EncounterStatus[TYPE_BEASTS];
                     case TYPE_JARAXXUS:

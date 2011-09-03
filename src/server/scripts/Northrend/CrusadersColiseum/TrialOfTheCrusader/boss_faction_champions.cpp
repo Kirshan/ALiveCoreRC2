@@ -329,6 +329,8 @@ struct boss_faction_championsAI : public ScriptedAI
             if (m_pInstance)
                 if (Creature* pChampionController = Unit::GetCreature((*me), m_pInstance->GetData64(NPC_CHAMPIONS_CONTROLLER)))
                     pChampionController->AI()->SetData(2, DONE);
+
+		m_pInstance->SetData(DATA_FACTION_CHAMPIONS,0);
     }
 
     void EnterCombat(Unit* /*who*/)
