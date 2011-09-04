@@ -820,9 +820,12 @@ class npc_tirion_toc : public CreatureScript
 							Map::PlayerList const &players = me->GetMap()->GetPlayers();
 							for (Map::PlayerList::const_iterator itr = players.begin(); itr != players.end(); ++itr)
 							{
-								Player* dietarget = itr->getSource();
-								dietarget->SummonGameObject(191164, posx, posy, posz, 0, 0, 0, 0, 0, 6000000);
-								break;
+								Player* p_portalcaster = itr->getSource();
+								if (!p_portalcaster->isGameMaster())
+								{
+									p_portalcaster->SummonGameObject(191164, posx, posy, posz, 0, 0, 0, 0, 0, 6000000);
+									break;
+								}
 							}
 							m_uiUpdateTimer = 1000;
                             m_pInstance->SetData(TYPE_EVENT, 6010);
