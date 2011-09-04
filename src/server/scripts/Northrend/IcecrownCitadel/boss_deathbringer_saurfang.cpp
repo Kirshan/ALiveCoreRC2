@@ -262,6 +262,7 @@ class boss_deathbringer_saurfang : public CreatureScript
                 DoCast(me, SPELL_RUNE_OF_BLOOD_S, true);
                 me->RemoveAurasDueToSpell(SPELL_BERSERK);
                 me->RemoveAurasDueToSpell(SPELL_FRENZY);
+				me->SetFloatValue(OBJECT_FIELD_SCALE_X, 1.00f);
             }
 
             void EnterCombat(Unit* who)
@@ -408,6 +409,52 @@ class boss_deathbringer_saurfang : public CreatureScript
 
                 while (uint32 eventId = events.ExecuteEvent())
                 {
+					uint32 power = me->GetPower(POWER_ENERGY);
+					if (power == 100)
+					{
+						me->SetFloatValue(OBJECT_FIELD_SCALE_X, 2.00f);
+					}
+					else if (power >= 90 && power < 100)
+					{
+						me->SetFloatValue(OBJECT_FIELD_SCALE_X, 1.90f);
+					}
+					else if (power >= 80 && power < 90)
+					{
+						me->SetFloatValue(OBJECT_FIELD_SCALE_X, 1.80f);
+					}
+					else if (power >= 70 && power < 80)
+					{
+						me->SetFloatValue(OBJECT_FIELD_SCALE_X, 1.70f);
+					}
+					else if (power >= 60 && power < 70)
+					{
+						me->SetFloatValue(OBJECT_FIELD_SCALE_X, 1.60f);
+					}
+					else if (power >= 50 && power < 60)
+					{
+						me->SetFloatValue(OBJECT_FIELD_SCALE_X, 1.50f);
+					}
+					else if (power >= 40 && power < 50)
+					{
+						me->SetFloatValue(OBJECT_FIELD_SCALE_X, 1.40f);
+					}
+					else if (power >= 30 && power < 40)
+					{
+						me->SetFloatValue(OBJECT_FIELD_SCALE_X, 1.30f);
+					}
+					else if (power >= 20 && power < 30)
+					{
+						me->SetFloatValue(OBJECT_FIELD_SCALE_X, 1.20f);
+					}
+					else if (power >= 10 && power < 20)
+					{
+						me->SetFloatValue(OBJECT_FIELD_SCALE_X, 1.10f);
+					}
+					else if (power >= 0 && power < 10)
+					{
+						me->SetFloatValue(OBJECT_FIELD_SCALE_X, 1.00f);
+					}
+				
                     switch (eventId)
                     {
                         case EVENT_INTRO_ALLIANCE_2:
