@@ -246,11 +246,22 @@ class instance_trial_of_the_crusader : public InstanceMapScript
                 switch (type)
                 {
 					case DATA_FACTION_CHAMPIONS:
-						if (ChampionCount < 5)
-						ChampionCount++;
-						else if (ChampionCount == 5)
-							SetData(TYPE_CRUSADERS,DONE);
-						break;
+						if (RAID_DIFFICULTY_25MAN_NORMAL || RAID_DIFFICULTY_25MAN_HEROIC)
+						{
+							if (ChampionCount < 10)
+								ChampionCount++;
+							else if (ChampionCount == 10)
+								SetData(TYPE_CRUSADERS,DONE);
+							break;
+						}
+						else
+						{
+							if (ChampionCount < 5)
+								ChampionCount++;
+							else if (ChampionCount == 5)
+								SetData(TYPE_CRUSADERS,DONE);
+							break;
+						}
                     case TYPE_JARAXXUS:
                         if (data == DONE)
                             EventStage = 2000;
