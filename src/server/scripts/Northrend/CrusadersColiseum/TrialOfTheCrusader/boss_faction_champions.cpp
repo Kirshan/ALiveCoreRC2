@@ -1186,6 +1186,7 @@ public:
 
         SummonList Summons;
 
+		uint8 SummonPet;
         uint32 m_uiDisengageTimer;
         uint32 m_uiDeterrenceTimer;
         uint32 m_uiWyvernStingTimer;
@@ -1207,10 +1208,17 @@ public:
 
             m_uiSummonPetTimer = urand(15*IN_MILLISECONDS, 30*IN_MILLISECONDS);
             DoCast(SPELL_CALL_PET);
+			SummonPet = 0;
         }
 
         void UpdateAI(const uint32 uiDiff)
         {
+			if (SummonPet == 0)
+			{
+				me->CastSpell(me, SPELL_CALL_PET);
+				SummonPet = 1;
+			}
+
             if (!UpdateVictim()) return;
 
             if (m_uiDisengageTimer <= uiDiff)
