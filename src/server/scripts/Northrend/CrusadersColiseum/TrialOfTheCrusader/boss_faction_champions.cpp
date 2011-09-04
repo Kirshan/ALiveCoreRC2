@@ -438,13 +438,18 @@ struct boss_faction_championsAI : public ScriptedAI
 
         if (mAIType != AI_PET)
         {
-            if (CCTimer < uiDiff)
-            {
-                RemoveCC();
-                CCTimer = 8000+rand()%2000;
-            }
-            else CCTimer -= uiDiff;
-        }
+			if (CCTimer < uiDiff)
+			{
+				if (me->HasAuraType(SPELL_AURA_MOD_STUN) || me->HasAuraType(SPELL_AURA_MOD_FEAR) || me->HasAuraType(SPELL_AURA_MOD_CHARM) || me->HasAuraType(SPELL_AURA_MOD_ROOT) || me->HasAuraType(SPELL_AURA_MOD_CONFUSE))
+				{
+					RemoveCC();
+					CCTimer = 120000;
+				}
+				else
+					CCTimer = 5000;
+			}
+			else CCTimer -= uiDiff;
+		}
 
         if (mAIType == AI_MELEE || mAIType == AI_PET) DoMeleeAttackIfReady();
     }
@@ -1181,6 +1186,7 @@ public:
 
         SummonList Summons;
 
+		uint8 SummonPet;
         uint32 m_uiDisengageTimer;
         uint32 m_uiDeterrenceTimer;
         uint32 m_uiWyvernStingTimer;
@@ -1202,10 +1208,17 @@ public:
 
             m_uiSummonPetTimer = urand(15*IN_MILLISECONDS, 30*IN_MILLISECONDS);
             DoCast(SPELL_CALL_PET);
+			SummonPet = 0;
         }
 
         void UpdateAI(const uint32 uiDiff)
         {
+			if (SummonPet == 0)
+			{
+				me->CastSpell(me, SPELL_CALL_PET);
+				SummonPet = 1;
+			}
+
             if (!UpdateVictim()) return;
 
             if (m_uiDisengageTimer <= uiDiff)
