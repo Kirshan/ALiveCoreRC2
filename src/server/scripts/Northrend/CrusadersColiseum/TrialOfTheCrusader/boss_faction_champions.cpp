@@ -439,9 +439,14 @@ struct boss_faction_championsAI : public ScriptedAI
         if (mAIType != AI_PET)
         {
             if (CCTimer < uiDiff)
-            {
-                RemoveCC();
-                CCTimer = 8000+rand()%2000;
+			{
+				if (me->HasAuraType(SPELL_AURA_MOD_STUN) || me->HasAuraType(SPELL_AURA_MOD_FEAR) || me->HasAuraType(SPELL_AURA_MOD_CHARM) || me->HasAuraType(SPELL_AURA_MOD_ROOT) || me->HasAuraType(SPELL_AURA_MOD_CONFUSE))
+				{
+					RemoveCC();
+					CCTimer = 120000;
+				}
+				else
+					CCTimer = 5000;
             }
             else CCTimer -= uiDiff;
         }
