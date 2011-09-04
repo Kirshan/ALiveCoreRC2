@@ -438,7 +438,7 @@ struct boss_faction_championsAI : public ScriptedAI
 
         if (mAIType != AI_PET)
         {
-            if (CCTimer < uiDiff)
+			if (CCTimer < uiDiff)
 			{
 				if (me->HasAuraType(SPELL_AURA_MOD_STUN) || me->HasAuraType(SPELL_AURA_MOD_FEAR) || me->HasAuraType(SPELL_AURA_MOD_CHARM) || me->HasAuraType(SPELL_AURA_MOD_ROOT) || me->HasAuraType(SPELL_AURA_MOD_CONFUSE))
 				{
@@ -447,9 +447,9 @@ struct boss_faction_championsAI : public ScriptedAI
 				}
 				else
 					CCTimer = 5000;
-            }
-            else CCTimer -= uiDiff;
-        }
+			}
+			else CCTimer -= uiDiff;
+		}
 
         if (mAIType == AI_MELEE || mAIType == AI_PET) DoMeleeAttackIfReady();
     }
