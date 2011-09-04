@@ -677,14 +677,22 @@ public:
 
         void UpdateAI(const uint32 uiDiff)
         {
-            Unit* target = Unit::GetPlayer(*me, m_uiTargetGUID);
+			if (Unit* target = SelectTarget(SELECT_TARGET_RANDOM, 0))
+			{
+				while (!target || !target->isAlive() || !target->HasAura(SPELL_MARK) || target->isTotem())
+				{
+					target = SelectTarget(SELECT_TARGET_RANDOM, 0);
+				}
+			}
+
+            /*Unit* target = Unit::GetPlayer(*me, m_uiTargetGUID);
             if (!target || !target->isAlive() || !target->HasAura(SPELL_MARK) || target->isTotem())
             {
                 if (Creature* pAnubarak = Unit::GetCreature((*me), m_pInstance->GetData64(NPC_ANUBARAK)))
                     pAnubarak->CastSpell(pAnubarak, SPELL_SPIKE_TELE, false);
                 me->DisappearAndDie();
                 return;
-            }
+            }*/
 
             if (m_uiIncreaseSpeedTimer)
             {
