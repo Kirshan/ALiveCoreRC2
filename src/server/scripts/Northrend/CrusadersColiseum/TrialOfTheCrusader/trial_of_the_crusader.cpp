@@ -792,7 +792,7 @@ class npc_tirion_toc : public CreatureScript
                             break;
                         case 6000:
                             me->NearTeleportTo(AnubarakLoc[0].GetPositionX(), AnubarakLoc[0].GetPositionY(), AnubarakLoc[0].GetPositionZ(), 4.0f);
-                            m_uiUpdateTimer = 20000;
+                            m_uiUpdateTimer = 14000;
                             m_pInstance->SetData(TYPE_EVENT, 6005);
                             break;
                         case 6005:
@@ -806,18 +806,26 @@ class npc_tirion_toc : public CreatureScript
 							Creature *m_mage = me->FindNearestCreature(33643, 100.0f, true);
 							m_mage->SetOrientation(me->GetOrientation());
 							m_mage->AI()->DoCastAOE(53142);
-                            m_uiUpdateTimer = 10000;
+                            m_uiUpdateTimer = 11000;
                             m_pInstance->SetData(TYPE_EVENT, 6009);
                             break;
 						}
 						case 6009:
 						{
-							Creature *m_mage = me->FindNearestCreature(33643, 100.0f, true);
 							GameObject *portal = me->FindNearestGameObject(191164, 100.0f);
+							float posx = portal->GetPositionX();
+							float posy = portal->GetPositionY();
+							float posz = portal->GetPositionZ();
 							portal->DestroyForNearbyPlayers();
-							m_mage->SummonGameObject(191164, 787.932556f, 138.289780f, 142.612152f,0,0,0,0,0,6000000);
+							Map::PlayerList const &players = me->GetMap()->GetPlayers();
+							for (Map::PlayerList::const_iterator itr = players.begin(); itr != players.end(); ++itr)
+							{
+								Player* dietarget = itr->getSource();
+								dietarget->SummonGameObject(191164, posx, posy, posz, 0, 0, 0, 0, 0, 6000000);
+								break;
+							}
 							m_uiUpdateTimer = 1000;
-                            m_pInstance->SetData(TYPE_EVENT, 6009);
+                            m_pInstance->SetData(TYPE_EVENT, 6010);
 						}
                         case 6010:
                             if (IsHeroic())
