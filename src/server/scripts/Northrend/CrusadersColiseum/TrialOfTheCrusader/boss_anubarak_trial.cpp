@@ -18,7 +18,7 @@
 
 /* ScriptData
 SDName: boss_anubarak_trial
-SD%Complete: ??%
+SD%Complete: 99%
 SDComment: based on /dev/rsa
 SDCategory:
 EndScriptData */
