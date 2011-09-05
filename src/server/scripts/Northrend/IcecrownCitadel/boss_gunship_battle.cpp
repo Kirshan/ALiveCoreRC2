@@ -1432,6 +1432,51 @@ class npc_combattrigger : public CreatureScript
         }
 };
 
+
+class npc_GunShip_healthtrigger : public CreatureScript
+{
+    public:
+        npc_GunShip_healthtrigger() : CreatureScript("npc_GunShip_healthtrigger") { }
+
+                struct npc_GunShip_healthtriggerAI : public ScriptedAI
+                {
+                        npc_GunShip_healthtriggerAI(Creature* pCreature) : ScriptedAI(pCreature)
+						{ 
+							pInstance = me->GetInstanceScript(); 
+						}
+
+                        void Reset()
+                        {
+
+							me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_DISABLE_MOVE);
+							//me->SetVisible(false); // Must see the NPC in Debug ;)
+
+							Map::PlayerList const &players = me->GetMap()->GetPlayers();
+							for (Map::PlayerList::const_iterator itr = players.begin(); itr != players.end(); ++itr)
+							{
+								Player* player = itr->getSource();
+								if (!player->isGameMaster())
+								{
+									me->AI()->AttackStart(player);
+									break;
+								}
+							}
+                        }
+
+                        void UpdateAI( const uint32 diff)
+                        {
+							
+						}
+
+						InstanceScript* pInstance;
+                };
+
+        CreatureAI* GetAI(Creature* pCreature) const
+        {
+            return new npc_GunShip_healthtriggerAI(pCreature);
+        }
+};
+
 void AddSC_boss_gunship_battle()
 {
         new npc_sergeant();
@@ -1444,4 +1489,5 @@ void AddSC_boss_gunship_battle()
         new boss_muradin_bronzebeard();
         new boss_high_overlord_varok_saurfang();
 		new npc_combattrigger();
+		new npc_GunShip_healthtrigger();
 }
