@@ -1285,29 +1285,24 @@ class npc_combattrigger : public CreatureScript
 							SetCombatMovement(false);
                         }
 
+						void JustDied(Unit* /*killer*/)
+						{
+							if(me->GetEntry() == RAID_MODE(NPC_HORDEGSTRIGGER_10, NPC_HORDEGSTRIGGER_25, NPC_HORDEGSTRIGGER_10, NPC_HORDEGSTRIGGER_25))
+							{
+								pInstance->SetBossState(DATA_GUNSHIP_BATTLE_EVENT, DONE);
+								pInstance->SetBossState(DATA_GUNSHIP_BATTLE_EVENT, NOT_STARTED);
+							}
+							if(me->GetEntry() == RAID_MODE(NPC_ALLIGSTRIGGER_10, NPC_ALLIGSTRIGGER_25, NPC_ALLIGSTRIGGER_10, NPC_ALLIGSTRIGGER_25))
+							{
+								pInstance->SetBossState(DATA_GUNSHIP_BATTLE_EVENT, DONE);
+								pInstance->DoCompleteAchievement(RAID_MODE(IM_ON_A_BOAT_10,IM_ON_A_BOAT_25));
+							}
+						}
+
                         void UpdateAI( const uint32 diff)
                         {
 							if (pInstance && pInstance->GetBossState(DATA_GUNSHIP_BATTLE_EVENT) == DONE)
 									me->Kill(me);
-
-							if (player->GetTeamId() == TEAM_HORDE)
-							{
-								Creature *alligs = me->FindNearestCreature(RAID_MODE(NPC_ALLIGSTRIGGER_10, NPC_ALLIGSTRIGGER_25, NPC_ALLIGSTRIGGER_10, NPC_ALLIGSTRIGGER_25),400);
-								if(me->GetEntry() == RAID_MODE(NPC_HORDEGSTRIGGER_10, NPC_HORDEGSTRIGGER_25, NPC_HORDEGSTRIGGER_10, NPC_HORDEGSTRIGGER_25))
-									if(me->isAlive() && !alligs->isAlive())
-									{
-										pInstance->SetBossState(DATA_GUNSHIP_BATTLE_EVENT, DONE);
-										pInstance->DoCompleteAchievement(RAID_MODE(IM_ON_A_BOAT_10,IM_ON_A_BOAT_25));
-									}
-							}else{
-								Creature *hordegs = me->FindNearestCreature(RAID_MODE(NPC_HORDEGSTRIGGER_10, NPC_HORDEGSTRIGGER_25, NPC_HORDEGSTRIGGER_10, NPC_HORDEGSTRIGGER_25),400);
-								if(me->GetEntry() == RAID_MODE(NPC_ALLIGSTRIGGER_10, NPC_ALLIGSTRIGGER_25, NPC_ALLIGSTRIGGER_10, NPC_ALLIGSTRIGGER_25))
-									if(me->isAlive() && !hordegs->isAlive())
-									{
-										pInstance->SetBossState(DATA_GUNSHIP_BATTLE_EVENT, DONE);
-										pInstance->DoCompleteAchievement(RAID_MODE(IM_ON_A_BOAT_10,IM_ON_A_BOAT_25));
-									}
-							}
 
 							if (CaseTimer <= diff)
 							{
