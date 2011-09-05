@@ -16,12 +16,13 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  */
- 
- /* % Completado: 92 %
-  * Requiere datos de posiciones, correcciones y
-  * concluir soporte SQL
-  * Autor: Equipo de Desarrollo Blackcore
-  */
+
+/*
+Autor: DarkSoe
+by wow-alive // http://wow-alive.de/
+
+thx to wowhead Team for right canon entry's
+*/
 
 #include "ScriptPCH.h"
 #include "icecrown_citadel.h"
@@ -29,8 +30,10 @@
 #include "Transport.h"
 
 /*
-BIBLIA :
+Dedails from :
 http://www.wowwiki.com/Gunship_Battle
+http://www.youtube.com/watch?v=00FbefuBzF0
+http://wowhead.com/
 */
 
 // Fusileros
@@ -46,6 +49,7 @@ const Position SpawnZafodHorde                  =       {0.0f, 0.0f, 0.0f, 0.0f}
 // Do_Action
 #define DO_ACTION_START_GUNSHIP_BATTLE          0
 #define DO_ACTION_FINISH_GUNSHIP_BATTLE         1
+#define DO_ACTION_BATTLE_START					2
 
 // tp de fin
 const Position DeathbringerRise = { -549.80548f, 2211.19238f, 539.29119f, 6.27718f};
@@ -80,7 +84,7 @@ const Position SpawnPosHorde[] =
 #define GO_SKYBREAKER                                           192242
 #define GO_GUNSHIP_STAIRS_ALLIANCE                      201709  // Acceso innecesario, imposible
 #define GO_ALLIANCE_GUNSHIP_PORTAL                      195371  // z Útiles ?
-#define NPC_GUNSHIP_CANNON_ALLIANCE                     34929
+#define NPC_GUNSHIP_CANNON_ALLIANCE                     36838
 
 #define SKYBREAKER_X                                            0
 #define SKYBREAKER_Y                                            0
@@ -115,7 +119,7 @@ const Position PosMuradinBronzebeard[]=
 #define GO_OGRIM_HAMMER                                         192241
 #define GO_GUNSHIP_STAIRS_HORDE                         202211  // Innecesario.
 #define GO_HORDE_GUNSHIP_PORTAL                         196413  // z Útil ?
-#define NPC_GUNSHIP_CANNON_HORDE                        34935
+#define NPC_GUNSHIP_CANNON_HORDE                        36839
 
 #define OGRIM_HAMMER_X                                          0
 #define OGRIM_HAMMER_Y                                          0
@@ -210,9 +214,10 @@ const Position PosHighOverlordVarokSaurfang[]=
 #define SAY_KORKRON_SECOND_SQUAD_1      "Captain Saurfang will be pleased to see you aboard Orgrim's Hammer. Make haste, we will secure the area until you are ready for take-off."
 
 // COMIENZA_EL_EVENTO
+#define YELL_EVENT_BEGIN_HORDE_HIGH_OVERLORD_SAURFANG_4 "ALL HANDS ON DECK!"
 #define YELL_EVENT_BEGIN_HORDE_HIGH_OVERLORD_SAURFANG_0 "Rise up, sons and daughters of the Horde! Today we battle a hated enemy of the Horde! LOK'TAR OGAR! Kor'kron, take us out!"
 #define YELL_EVENT_BEGIN_HORDE_HIGH_OVERLORD_SAURFANG_1 "What is that?! Something approaching in the distance!"
-#define YELL_EVENT_BEGIN_HORDE_HIGH_OVERLORD_SAURFANG_2 "ALLIANCE GUNSHIP! ALL HANDS ON DECK!"
+#define YELL_EVENT_BEGIN_HORDE_HIGH_OVERLORD_SAURFANG_2 "ALLIANCE GUNSHIP!"
 #define YELL_EVENT_BEGIN_HORDE_MURADIN_BRONZEBEARD_0    "Move yer jalopy or we'll blow it out of the sky, orc! The Horde's got no business here!"
 #define YELL_EVENT_BEGIN_HORDE_HIGH_OVERLORD_SAURFANG_3 "You will know our business soon! KOR'KRON, ANNIHILATE THEM!"
 
@@ -327,7 +332,8 @@ class npc_zafod_boombox : public CreatureScript
                                  pCreature->GetInstanceScript()->GetBossState(DATA_GUNSHIP_BATTLE_EVENT) == DONE)
                 return false;
 
-                        pPlayer->ADD_GOSSIP_ITEM(49278, "Give me one of these machines", 1000, ZAFOD_BOOMBOX_GOSSIP_GET);
+                        // pPlayer->ADD_GOSSIP_ITEM(49278, "Give me one of these machines", 1000, ZAFOD_BOOMBOX_GOSSIP_GET);
+						pPlayer->ADD_GOSSIP_ITEM(0, "Give me one of these machines", 631, ZAFOD_BOOMBOX_GOSSIP_GET);
                         pPlayer->ADD_GOSSIP_ITEM(0, "Maybe later", 1001, ZAFOD_BOOMBOX_GOSSIP_CANCEL);
                         pPlayer->SEND_GOSSIP_MENU(pPlayer->GetGossipTextId(pCreature), pCreature->GetGUID());
 
@@ -339,15 +345,13 @@ class npc_zafod_boombox : public CreatureScript
                         player->PlayerTalkClass->ClearMenus();
                         player->CLOSE_GOSSIP_MENU();
 
-                        switch( action) {
-                                case    ALLIANCE_GOSSIP_ACTION_START    :
-                                                        pCreature->AI()->DoAction( DO_ACTION_START_GUNSHIP_BATTLE); // lancement de la cannonicre !
-                                                        return true;
-                                case    ALLIANCE_GOSSIP_ACTION_TP               :
-                                                        pCreature->AI()->DoAction( DO_ACTION_FINISH_GUNSHIP_BATTLE); // aprcs fin de la cannonicre !
-                                                        return true;
-                                case    ALLIANCE_GOSSIP_ACTION_CANCEL   :
-                                                        return true;
+                        switch( action) 
+						{
+                                case ZAFOD_BOOMBOX_GOSSIP_GET :
+									{
+										player->AddItem(49278,1);
+                                        return true;
+									}
                         };
 
                         return false;
@@ -493,8 +497,6 @@ class boss_muradin_bronzebeard : public CreatureScript
                                                                         dialogTimer = 10000;
                                                                 }
                                                                 break;
-
-                                                // EMBARQUE_EVENTO
                                                         case    9       :
                                                                 if( Creature* pHighOverlordSaurfang = Unit::GetCreature(*me, instance->GetData64( NPC_HIGH_OVERLORD_VAROK_SAURFANG))) {
                                                                         pHighOverlordSaurfang->MonsterYell( YELL_BOARDING_ORGRIM_S_HAMMER_HIGH_OVERLORD_SAURFANG_0, LANG_UNIVERSAL, 0);
@@ -700,12 +702,14 @@ class boss_high_overlord_varok_saurfang : public CreatureScript
 
                         void UpdateAI( const uint32 diff) 
                         {
-                                if( bDialog) {
-                                        if( dialogTimer <= diff) {
-                                                switch( dialogID) {
-
-                                                // COMIENZA_EL_EVENTO
-                                                        case    0       :
+                                if( bDialog) 
+								{
+                                        if( dialogTimer <= diff) 
+										{
+                                                switch( dialogID) 
+												{
+                                                        case 0 :
+															{
                                                                 me->MonsterYell( YELL_EVENT_BEGIN_HORDE_HIGH_OVERLORD_SAURFANG_0, LANG_UNIVERSAL, 0);
 																if( GameObject* AlliGunShip = GameObject::GetGameObject(*me, instance->GetData64(GO_ALLI_GUNSHIP_2)))
 																{
@@ -729,7 +733,45 @@ class boss_high_overlord_varok_saurfang : public CreatureScript
                                                                 dialogID = 1;
                                                                 dialogTimer = 8000;
                                                                 break;
-                                                        case    1       :
+															}
+														case 1 :
+															{
+																me->MonsterYell( YELL_EVENT_BEGIN_HORDE_HIGH_OVERLORD_SAURFANG_4, LANG_UNIVERSAL, 0);
+																me->GetMotionMaster()->MovePoint(0, -437.100830f, 1987.904297f, 191.234131f);
+																dialogID = 2;
+                                                                dialogTimer = 2000;
+																break;
+															}
+														case 2 :
+															{
+																me->GetMotionMaster()->MovePoint(0, -437.477875f, 1948.863892f, 214.638245f);
+																dialogID = 3;
+                                                                dialogTimer = 6000;
+																break;
+															}
+														case 3 :
+															{
+																me->GetMotionMaster()->MovePoint(0, -443.602417f, 1935.741455f, 214.005554f);
+																dialogID = 4;
+                                                                dialogTimer = 2000;
+																break;
+															}
+														case 4 :
+															{
+																me->GetMotionMaster()->MovePoint(0, -484.726990f, 1915.420776f, 216.699356f);
+																dialogID = 5;
+                                                                dialogTimer = 7000;
+																break;
+															}
+														case 5 :
+															{
+																me->GetMotionMaster()->MovePoint(0, -482.312256f, 1915.456787f, 216.481705f);
+																dialogID = 6;
+                                                                dialogTimer = 1000;
+																break;
+															}
+                                                        case 6 :
+															{
                                                                 me->MonsterYell( YELL_EVENT_BEGIN_HORDE_HIGH_OVERLORD_SAURFANG_1, LANG_UNIVERSAL, 0);
 																if( GameObject* AlliGunShip = GameObject::GetGameObject(*me, instance->GetData64(GO_ALLI_GUNSHIP_2)))
 																{
@@ -738,75 +780,90 @@ class boss_high_overlord_varok_saurfang : public CreatureScript
 																	AlliGunShip->DestroyForNearbyPlayers();
 																	AlliGunShip->UpdateObjectVisibility();
 																}
-                                                                dialogID = 2;
+                                                                dialogID = 7;
                                                                 dialogTimer = 3000;
                                                                 break;
-                                                        case    2       :
+															}
+                                                        case 7 :
+															{
                                                                 me->MonsterYell( YELL_EVENT_BEGIN_HORDE_HIGH_OVERLORD_SAURFANG_2, LANG_UNIVERSAL, 0);
-                                                                dialogID = 3;
+                                                                dialogID = 8;
                                                                 dialogTimer = 5000;
                                                                 break;
-                                                        case    3       :
-                                                                if( Creature* pMuradinBronzebeard = Unit::GetCreature(*me, instance->GetData64(NPC_MURADIN_BRONZEBEARD))) {
+															}
+                                                        case 8 :
+															{
+                                                                if( Creature* pMuradinBronzebeard = Unit::GetCreature(*me, instance->GetData64(NPC_MURADIN_BRONZEBEARD))) 
+																{
                                                                         pMuradinBronzebeard->MonsterYell( YELL_EVENT_BEGIN_HORDE_MURADIN_BRONZEBEARD_0, LANG_UNIVERSAL, 0);
-                                                                        dialogID = 4;
+                                                                        dialogID = 9;
                                                                         dialogTimer = 2000;
                                                                 }
                                                                 break;
-                                                        case    4       :
+															}
+                                                        case 9 :
+															{
                                                                 me->MonsterYell( YELL_EVENT_BEGIN_HORDE_HIGH_OVERLORD_SAURFANG_3, LANG_UNIVERSAL, 0);
-                                                                dialogID = 5;
+                                                                dialogID = 10;
                                                                 dialogTimer = 2000;
                                                                 break;
-                                                        case    5       :
-                                                                {
-                                                                        Position tp;
-																		tp.m_positionX = -73.149117f;
-																		tp.m_positionY = 2202.202393f;
-																		tp.m_positionZ = 530.593140f;
-																		tp.m_orientation = 1.495439f;
+															}
+                                                        case 10 :
+                                                            {
+																Position tp;
+																tp.m_positionX = -73.149117f;
+																tp.m_positionY = 2202.202393f;
+																tp.m_positionZ = 530.593140f;
+																tp.m_orientation = 1.495439f;
 
-																		//Dont need teleport anymore when Move works
-                                                                        Map::PlayerList const &PlayerList = me->GetMap()->GetPlayers();
-                                                                        if( !PlayerList.isEmpty()) {
-                                                                                for(Map::PlayerList::const_iterator i = PlayerList.begin(); i != PlayerList.end(); ++i) {
-                                                                                        if( Player *pCurrent = i->getSource()) {
-                                                                                                if( me->GetDistance(pCurrent) <= 100.0f)
-                                                                                                        DoTeleportPlayer( pCurrent, tp.GetPositionX(), tp.GetPositionY(), tp.GetPositionZ(), tp.GetOrientation());
-                                                                                        }
-                                                                                }
+																//Dont need teleport anymore when Move works
+                                                                Map::PlayerList const &PlayerList = me->GetMap()->GetPlayers();
+                                                                if( !PlayerList.isEmpty()) 
+																{
+																	for(Map::PlayerList::const_iterator i = PlayerList.begin(); i != PlayerList.end(); ++i) 
+																	{
+																		if( Player *pCurrent = i->getSource()) 
+																		{
+																			if( me->GetDistance(pCurrent) <= 100.0f)
+																				DoTeleportPlayer( pCurrent, tp.GetPositionX(), tp.GetPositionY(), tp.GetPositionZ(), tp.GetOrientation());
                                                                         }
-
-                                                                        me->SetPosition( tp, true);
-                                                                        dialogID = 6;
-                                                                        dialogTimer = 10000;
+                                                                    }
                                                                 }
+                                                                //me->SetPosition( tp, true);
+																me->NearTeleportTo(tp.GetPositionX(), tp.GetPositionY(), tp.GetPositionZ(), tp.GetOrientation());
+                                                                dialogID = 11;
+                                                                dialogTimer = 10000;
                                                                 break;
-
-                                                // EMBARQUE_EVENTO
-                                                        case    6       :
+															}
+														case 11 :
+															{
                                                                 if( Creature* pMuradinBronzebeard = Unit::GetCreature(*me, instance->GetData64( NPC_MURADIN_BRONZEBEARD))) {
                                                                         pMuradinBronzebeard->MonsterYell( YELL_BOARDING_ORGRIM_S_HAMMER_MURADIN_BRONZEBEARD_0, LANG_UNIVERSAL, 0);
-                                                                        dialogID = 7;
+                                                                        dialogID = 12;
                                                                         dialogTimer = 2000;
                                                                 }
                                                                 break;
-                                                        case    7       :
+															}
+                                                        case 12 :
+															{
                                                                 me->MonsterYell( YELL_BOARDING_ORGRIM_S_HAMMER_HIGH_OVERLORD_SAURFANG_0, LANG_UNIVERSAL, 0);
-                                                                dialogID = 8;
+                                                                dialogID = 13;
                                                                 dialogTimer = 2000;
                                                                 break;
-                                                        case    8       :
-                                                                // ? COMIENZO DE LA BATALLA DE LOS CANONES !
+															}
+														case 13 :
+															{
                                                                 bBattleStart = true;
 																bDialog = false;
-																DoAction(DO_ACTION_START_GUNSHIP_BATTLE);
+																DoAction(DO_ACTION_BATTLE_START);
                                                                 break;
-                                                };
+															}
+                                                }
                                         } else dialogTimer -= diff;
                                 }
 
-                                if( bBattleStart) {
+                                if( bBattleStart) 
+								{
                                         if (!UpdateVictim())
                                                 return;
                                 
@@ -833,32 +890,71 @@ class boss_high_overlord_varok_saurfang : public CreatureScript
 
                         void DoAction(const int32 param)
                         {
-                                switch( param) {
-                                        case    DO_ACTION_START_GUNSHIP_BATTLE  :
-                                                health_theSkybreaker = RAID_MODE( 600000, 1200000);
-                                                health_ogrimsHammer = RAID_MODE( 600000, 1200000);
+                                switch( param) 
+								{
+										case DO_ACTION_BATTLE_START :
+											{
+												uint32 m_ALLIGSTRIGGER = RAID_MODE(NPC_ALLIGSTRIGGER_10, NPC_ALLIGSTRIGGER_25); // 600000, 1200000
+                                                uint32 m_HORDEGSTRIGGER = RAID_MODE(NPC_HORDEGSTRIGGER_10, NPC_HORDEGSTRIGGER_25); // 600000, 1200000
 
-                                                instance->SetBossState( DATA_GUNSHIP_BATTLE_EVENT, NOT_STARTED);
-                                                instance->SetData( DATA_GUNSHIP_EVENT, PHASE_NOT_STARTED);
+												if (Creature *m_AlliGS = me->SummonCreature(m_ALLIGSTRIGGER, 18.637676f, 2247.624023f, 527.277039f))
+												{
+													instance->SendEncounterUnit(ENCOUNTER_FRAME_ADD, m_AlliGS);
+												}
 
-                                                bDialog = true;
-                                                dialogID = 0;
-                                                dialogTimer = 0;
+												if (Creature *m_HordeGS = me->SummonCreature(m_HORDEGSTRIGGER, -71.189644f, 2226.092285f, 527.117432f))
+												{
+													instance->SendEncounterUnit(ENCOUNTER_FRAME_ADD, m_HordeGS);
+												}
+
+												if (Creature *canon = me->SummonCreature(NPC_GUNSHIP_CANNON_HORDE, -38.841675f, 2258.511963f, 526.378174f))
+													canon->SetOrientation(6.169659);
+												if (Creature *canon = me->SummonCreature(NPC_GUNSHIP_CANNON_HORDE, -38.193577f, 2253.306885f, 526.427917f))
+													canon->SetOrientation(6.169659);
+												if (Creature *canon = me->SummonCreature(NPC_GUNSHIP_CANNON_HORDE, -39.107193f, 2236.982422f, 526.979919f))
+													canon->SetOrientation(6.169659);
+												if (Creature *canon = me->SummonCreature(NPC_GUNSHIP_CANNON_HORDE, -38.604717f, 2241.389404f, 526.657288f))
+													canon->SetOrientation(6.169659);
+
+												me->SummonCreature(NPC_CANONTRIGGER, 39.714436f, 2230.390625f, 528.113281f);
+												me->SummonCreature(NPC_CANONTRIGGER, 43.005005f, 2256.538574f, 528.131104f);
+												
+												me->SummonCreature(NPC_FIGHTTRIGGER, 26.312359f, 2246.370850f, 527.267151f);
+											}
+                                        case DO_ACTION_START_GUNSHIP_BATTLE :
+											{
+												if (!bBattleStart)
+												{
+													health_theSkybreaker = RAID_MODE( 600000, 1200000);
+													health_ogrimsHammer = RAID_MODE( 600000, 1200000);
+
+													instance->SetBossState( DATA_GUNSHIP_BATTLE_EVENT, NOT_STARTED);
+													instance->SetData( DATA_GUNSHIP_EVENT, PHASE_NOT_STARTED);
+
+													bDialog = true;
+													dialogID = 0;
+													dialogTimer = 0;
+												}
                                                 break;
-
-                                        case    DO_ACTION_FINISH_GUNSHIP_BATTLE :
+											}
+                                        case DO_ACTION_FINISH_GUNSHIP_BATTLE :
+											{
                                                 Position tp = DeathbringerRise;
                                                 Map::PlayerList const &PlayerList = me->GetMap()->GetPlayers();
-                                                if( !PlayerList.isEmpty()) {
-                                                        for(Map::PlayerList::const_iterator i = PlayerList.begin(); i != PlayerList.end(); ++i) {
-                                                                if( Player *pCurrent = i->getSource()) {
-                                                                        if( me->GetDistance(pCurrent) <= 100.0f)
-                                                                                DoTeleportPlayer( pCurrent, tp.GetPositionX(), tp.GetPositionY(), tp.GetPositionZ(), tp.GetOrientation());
-                                                                }
-                                                        }
+                                                if( !PlayerList.isEmpty()) 
+												{
+													for(Map::PlayerList::const_iterator i = PlayerList.begin(); i != PlayerList.end(); ++i) 
+													{
+														if( Player *pCurrent = i->getSource()) 
+														{
+															if( me->GetDistance(pCurrent) <= 100.0f)
+																DoTeleportPlayer( pCurrent, tp.GetPositionX(), tp.GetPositionY(), tp.GetPositionZ(), tp.GetOrientation());
+														}
+													}
                                                 }
                                                 break;
-                                };
+											}
+                                }
                         }
 
                         uint32 health_theSkybreaker;
@@ -1259,6 +1355,83 @@ class npc_sorcerer_or_battle_mage : public CreatureScript
         }
 };
 
+class npc_combattrigger : public CreatureScript
+{
+    public:
+        npc_combattrigger() : CreatureScript("npc_combattrigger") { }
+
+                struct npc_combattriggerAI : public ScriptedAI
+                {
+                        npc_combattriggerAI(Creature* pCreature) : ScriptedAI(pCreature)
+						{ 
+							pInstance = me->GetInstanceScript(); 
+						}
+
+                        void Reset()
+                        {
+							CaseType = 0;
+							CaseTimer = 10000;
+
+							me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE | UNIT_FLAG_OOC_NOT_ATTACKABLE | UNIT_FLAG_DISABLE_MOVE);
+							//me->SetVisible(false); // Must see the NPC in Debug ;)
+
+							Map::PlayerList const &players = me->GetMap()->GetPlayers();
+							for (Map::PlayerList::const_iterator itr = players.begin(); itr != players.end(); ++itr)
+							{
+								Player* player = itr->getSource();
+								if (!player->isGameMaster())
+								{
+									me->AI()->AttackStart(player);
+									break;
+								}
+							}
+                        }
+
+                        void UpdateAI( const uint32 diff)
+                        {
+							if (CaseTimer <= diff)
+							{
+								switch (CaseType)
+								{
+									case 1 :
+										{
+											// Sumon Portal
+											CaseTimer = 2000;
+											CaseType = 2;
+											break;
+										}
+									case 2:
+										{
+											// Summon Deffer
+											CaseTimer = 30000;
+											CaseType = 3;
+											break;
+										}
+									case 3:
+										{
+											// Summon BattleMage
+											CaseTimer = 10000;
+											CaseType = 1;
+											break;
+										}
+								}
+							}else{
+								CaseTimer -= diff;
+							}
+						}
+
+						uint32 CaseType;
+                        uint32 CaseTimer;
+
+						InstanceScript* pInstance;
+                };
+
+        CreatureAI* GetAI(Creature* pCreature) const
+        {
+            return new npc_combattriggerAI(pCreature);
+        }
+};
+
 void AddSC_boss_gunship_battle()
 {
         new npc_sergeant();
@@ -1270,4 +1443,5 @@ void AddSC_boss_gunship_battle()
         new npc_sorcerer_or_battle_mage();
         new boss_muradin_bronzebeard();
         new boss_high_overlord_varok_saurfang();
+		new npc_combattrigger();
 }

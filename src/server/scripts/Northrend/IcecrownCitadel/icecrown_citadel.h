@@ -179,6 +179,14 @@ enum CreaturesIds
     NPC_REANIMATED_ADHERENT                     = 38010,
     NPC_VENGEFUL_SHADE                          = 38222,
 
+	// Gunship Battle
+	NPC_ALLIGSTRIGGER_10							= 400031,
+	NPC_HORDEGSTRIGGER_10							= 400030,
+	NPC_ALLIGSTRIGGER_25							= 400031,
+	NPC_HORDEGSTRIGGER_25							= 400030,
+	NPC_CANONTRIGGER							= 400032,
+	NPC_FIGHTTRIGGER							= 400033,
+
     // Deathbringer Saurfang
     NPC_DEATHBRINGER_SAURFANG                   = 37813,
     NPC_BLOOD_BEAST                             = 38508,
@@ -307,8 +315,8 @@ enum GameObjectsIds
     GO_LADY_DEATHWHISPER_ELEVATOR           = 202220,
 
 	// GunShip Battle
-	GO_HORDE_GUNSHIP					    = 19150,
-	GO_ALLI_GUNSHIP						    = 19149,
+	GO_HORDE_GUNSHIP					    = 1915002,
+	GO_ALLI_GUNSHIP						    = 1914902,
 	GO_HORDE_GUNSHIP_2					    = 1915001,
 	GO_ALLI_GUNSHIP_2					    = 1914901,
 
