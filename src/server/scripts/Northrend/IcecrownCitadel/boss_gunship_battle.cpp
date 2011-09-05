@@ -908,13 +908,13 @@ class boss_high_overlord_varok_saurfang : public CreatureScript
 												}
 
 												if (Creature *canon = me->SummonCreature(NPC_GUNSHIP_CANNON_HORDE, -38.841675f, 2258.511963f, 526.378174f))
-													canon->SetOrientation(6.169659);
+													canon->SetOrientation(6.169659f);
 												if (Creature *canon = me->SummonCreature(NPC_GUNSHIP_CANNON_HORDE, -38.193577f, 2253.306885f, 526.427917f))
-													canon->SetOrientation(6.169659);
+													canon->SetOrientation(6.169659f);
 												if (Creature *canon = me->SummonCreature(NPC_GUNSHIP_CANNON_HORDE, -39.107193f, 2236.982422f, 526.979919f))
-													canon->SetOrientation(6.169659);
+													canon->SetOrientation(6.169659f);
 												if (Creature *canon = me->SummonCreature(NPC_GUNSHIP_CANNON_HORDE, -38.604717f, 2241.389404f, 526.657288f))
-													canon->SetOrientation(6.169659);
+													canon->SetOrientation(6.169659f);
 
 												me->SummonCreature(NPC_CANONTRIGGER, 39.714436f, 2230.390625f, 528.113281f);
 												me->SummonCreature(NPC_CANONTRIGGER, 43.005005f, 2256.538574f, 528.131104f);
