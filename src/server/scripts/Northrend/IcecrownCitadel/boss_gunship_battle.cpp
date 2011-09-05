@@ -1069,18 +1069,7 @@ class npc_sergeant : public CreatureScript
 								if (pInstance && pInstance->GetBossState(DATA_GUNSHIP_BATTLE_EVENT) == DONE)
 									me->Kill(me);
 
-								/*if (me->FindNearestPlayer(400)->GetTeamId() == TEAM_HORDE)
-								{
-									uint32 m_HORDEGSTRIGGER = RAID_MODE(NPC_HORDEGSTRIGGER_10, NPC_HORDEGSTRIGGER_25, NPC_HORDEGSTRIGGER_10, NPC_HORDEGSTRIGGER_25);
-									if (Creature *trigger = me->FindNearestCreature(m_HORDEGSTRIGGER, 30, true))
-										if (!me->IsWithinDistInMap(trigger, 25))
-											me->AttackStop();
-								}else{
-									uint32 m_ALLIGSTRIGGER = RAID_MODE(NPC_ALLIGSTRIGGER_10, NPC_ALLIGSTRIGGER_25, NPC_ALLIGSTRIGGER_10, NPC_ALLIGSTRIGGER_25);
-									if (Creature *trigger = me->FindNearestCreature(m_ALLIGSTRIGGER, 30, true))
-										if (!me->IsWithinDistInMap(trigger, 25))
-											me->AttackStop();
-								}*/
+								// Need a Check , creature should not leaf the Bout.
 
 								if (!UpdateVictim())
 									return;
@@ -1282,18 +1271,7 @@ class npc_marine_or_reaver : public CreatureScript
 								if (pInstance && pInstance->GetBossState(DATA_GUNSHIP_BATTLE_EVENT) == DONE)
 									me->Kill(me);
 
-							/*if (me->FindNearestPlayer(400)->GetTeamId() == TEAM_HORDE)
-							{
-								uint32 m_HORDEGSTRIGGER = RAID_MODE(NPC_HORDEGSTRIGGER_10, NPC_HORDEGSTRIGGER_25, NPC_HORDEGSTRIGGER_10, NPC_HORDEGSTRIGGER_25);
-								if (Creature *trigger = me->FindNearestCreature(m_HORDEGSTRIGGER, 30, true))
-									if (!me->IsWithinDistInMap(trigger, 25))
-										me->AttackStop();
-							}else{
-								uint32 m_ALLIGSTRIGGER = RAID_MODE(NPC_ALLIGSTRIGGER_10, NPC_ALLIGSTRIGGER_25, NPC_ALLIGSTRIGGER_10, NPC_ALLIGSTRIGGER_25);
-								if (Creature *trigger = me->FindNearestCreature(m_ALLIGSTRIGGER, 30, true))
-									if (!me->IsWithinDistInMap(trigger, 25))
-										me->AttackStop();
-							}*/
+							// Need a Check , creature should not leaf the Bout.
                            
 								if (!UpdateVictim())
 									return;
@@ -1499,6 +1477,22 @@ class npc_combattrigger : public CreatureScript
                         {
 							if (pInstance && pInstance->GetBossState(DATA_GUNSHIP_BATTLE_EVENT) == DONE)
 									me->Kill(me);
+							if (player->GetTeamId() == TEAM_HORDE)
+							{
+								Creature *alligs = me->FindNearestCreature(RAID_MODE(NPC_ALLIGSTRIGGER_10, NPC_ALLIGSTRIGGER_25, NPC_ALLIGSTRIGGER_10, NPC_ALLIGSTRIGGER_25),400);
+									if(me->isAlive() && !alligs->isAlive())
+									{
+										pInstance->SetBossState(DATA_GUNSHIP_BATTLE_EVENT, DONE);
+										pInstance->DoCompleteAchievement(RAID_MODE(IM_ON_A_BOAT_10,IM_ON_A_BOAT_25));
+									}
+							}else{
+								Creature *hordegs = me->FindNearestCreature(RAID_MODE(NPC_HORDEGSTRIGGER_10, NPC_HORDEGSTRIGGER_25, NPC_HORDEGSTRIGGER_10, NPC_HORDEGSTRIGGER_25),400);
+									if(me->isAlive() && !hordegs->isAlive())
+									{
+										pInstance->SetBossState(DATA_GUNSHIP_BATTLE_EVENT, DONE);
+										pInstance->DoCompleteAchievement(RAID_MODE(IM_ON_A_BOAT_10,IM_ON_A_BOAT_25));
+									}
+							}
 
 							if (CaseTimer <= diff)
 							{
@@ -1603,67 +1597,6 @@ class npc_GunShip_healthtrigger : public CreatureScript
                         {
 							if (pInstance && pInstance->GetBossState(DATA_GUNSHIP_BATTLE_EVENT) == DONE)
 								me->Kill(me);
-
-							if(player->GetTeamId() == TEAM_HORDE)
-							{
-								m_me = me->GetEntry();
-								if (m_me == RAID_MODE(NPC_HORDEGSTRIGGER_10, NPC_HORDEGSTRIGGER_25, NPC_HORDEGSTRIGGER_10, NPC_HORDEGSTRIGGER_25))
-								{
-									Creature *alligs = me->FindNearestCreature(RAID_MODE(NPC_ALLIGSTRIGGER_10, NPC_ALLIGSTRIGGER_25, NPC_ALLIGSTRIGGER_10, NPC_ALLIGSTRIGGER_25),400);
-									if(me->isAlive() && !alligs->isAlive())
-									{
-										pInstance->SetBossState(DATA_GUNSHIP_BATTLE_EVENT, DONE);
-										Map::PlayerList const &players = me->GetMap()->GetPlayers();
-										for (Map::PlayerList::const_iterator itr = players.begin(); itr != players.end(); ++itr)
-										{
-											Player *Aplayer = itr->getSource();
-											//if (!player->isGameMaster()) // Not needet in Debug
-											//{
-												pInstance->DoCompleteAchievement(RAID_MODE(IM_ON_A_BOAT_10,IM_ON_A_BOAT_25));
-												break;
-											//}
-										}
-										me->Kill(me);
-									}
-								}else{
-									Creature *hordegs = me->FindNearestCreature(RAID_MODE(NPC_HORDEGSTRIGGER_10, NPC_HORDEGSTRIGGER_25, NPC_HORDEGSTRIGGER_10, NPC_HORDEGSTRIGGER_25),400);
-									if(me->isAlive() && !hordegs->isAlive())
-									{
-										pInstance->SetBossState(DATA_GUNSHIP_BATTLE_EVENT, DONE);
-										pInstance->SetBossState(DATA_GUNSHIP_BATTLE_EVENT, NOT_STARTED);
-										me->Kill(me);
-									}
-								}	
-							}else{
-								m_me = me->GetEntry();
-								if (m_me == RAID_MODE(NPC_HORDEGSTRIGGER_10, NPC_HORDEGSTRIGGER_25, NPC_HORDEGSTRIGGER_10, NPC_HORDEGSTRIGGER_25))
-								{
-									Creature *alligs = me->FindNearestCreature(RAID_MODE(NPC_ALLIGSTRIGGER_10, NPC_ALLIGSTRIGGER_25, NPC_ALLIGSTRIGGER_10, NPC_ALLIGSTRIGGER_25),400);
-									if(me->isAlive() && !alligs->isAlive())
-									{
-										pInstance->SetBossState(DATA_GUNSHIP_BATTLE_EVENT, DONE);
-										pInstance->SetBossState(DATA_GUNSHIP_BATTLE_EVENT, NOT_STARTED);
-										me->Kill(me);
-									}
-								}else{
-									Creature *hordegs = me->FindNearestCreature(RAID_MODE(NPC_HORDEGSTRIGGER_10, NPC_HORDEGSTRIGGER_25, NPC_HORDEGSTRIGGER_10, NPC_HORDEGSTRIGGER_25),400);
-									if(me->isAlive() && !hordegs->isAlive())
-									{
-										pInstance->SetBossState(DATA_GUNSHIP_BATTLE_EVENT, DONE);
-										Map::PlayerList const &players = me->GetMap()->GetPlayers();
-										for (Map::PlayerList::const_iterator itr = players.begin(); itr != players.end(); ++itr)
-										{
-											Player *Aplayer = itr->getSource();
-											//if (!player->isGameMaster()) // Not needet in Debug
-											//{
-												pInstance->DoCompleteAchievement(RAID_MODE(IM_ON_A_BOAT_10,IM_ON_A_BOAT_25));
-												break;
-											//}
-										}
-										me->Kill(me);
-									}
-								}
-							}
 						}
 
 						uint32 m_me;
