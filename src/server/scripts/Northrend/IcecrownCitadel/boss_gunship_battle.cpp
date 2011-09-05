@@ -278,7 +278,14 @@ const Position PosHighOverlordVarokSaurfang[]=
 
 
 //-----------------------------------------------------------------------
+
 #define SPELL_ACHIEVEMENT                                                               72959
+
+enum eAchievements
+{
+    IM_ON_A_BOAT_10    = 4536,
+    IM_ON_A_BOAT_25    = 4612
+};
 
 //-----------------------------------------------------------------------
 #define PHASE_NOT_STARTED       0
@@ -319,43 +326,46 @@ class npc_zafod_boombox : public CreatureScript
                 struct npc_zafod_boomboxAI : public ScriptedAI
                 {
                         npc_zafod_boomboxAI(Creature* pCreature) : ScriptedAI(pCreature)
-            { pInstance = me->GetInstanceScript(); }
-
+						{
+							pInstance = me->GetInstanceScript(); 
+						}
+	
                         void UpdateAI( const uint32 diff) { }
 
                         InstanceScript* pInstance;
                 };
 
-                bool OnGossipHello(Player* pPlayer, Creature* pCreature)
-        {
-                        if ( pCreature->GetInstanceScript()->GetBossState(DATA_GUNSHIP_BATTLE_EVENT) == NOT_STARTED ||
-                                 pCreature->GetInstanceScript()->GetBossState(DATA_GUNSHIP_BATTLE_EVENT) == DONE)
-                return false;
+				bool OnGossipHello(Player* pPlayer, Creature* pCreature)
+				{
+					pPlayer->ADD_GOSSIP_ITEM( 2, "Give me one of these machines" , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF +1);
+					pPlayer->ADD_GOSSIP_ITEM( 2, "Maybe later" , GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF +2);
+					pPlayer->SEND_GOSSIP_MENU(DEFAULT_GOSSIP_MESSAGE,pCreature->GetGUID());
+					return true;
+				}
 
-                        // pPlayer->ADD_GOSSIP_ITEM(49278, "Give me one of these machines", 1000, ZAFOD_BOOMBOX_GOSSIP_GET);
-						pPlayer->ADD_GOSSIP_ITEM(0, "Give me one of these machines", 631, ZAFOD_BOOMBOX_GOSSIP_GET);
-                        pPlayer->ADD_GOSSIP_ITEM(0, "Maybe later", 1001, ZAFOD_BOOMBOX_GOSSIP_CANCEL);
-                        pPlayer->SEND_GOSSIP_MENU(pPlayer->GetGossipTextId(pCreature), pCreature->GetGUID());
-
-                        return true;
-                }
-
-                bool OnGossipSelect(Player* player, Creature* pCreature, uint32 /*sender*/, uint32 action)
-                {
-                        player->PlayerTalkClass->ClearMenus();
-                        player->CLOSE_GOSSIP_MENU();
-
-                        switch( action) 
-						{
-                                case ZAFOD_BOOMBOX_GOSSIP_GET :
-									{
-										player->AddItem(49278,1);
-                                        return true;
-									}
-                        };
-
-                        return false;
-                }
+				void SendDefaultMenu_ACTION(Player* pPlayer, Creature* pCreature, uint32 uiAction)   
+				{
+					switch (uiAction)
+					{
+                        case GOSSIP_ACTION_INFO_DEF +1: 
+							pPlayer->AddItem(49278,1);
+							pPlayer->CLOSE_GOSSIP_MENU();
+							break;
+                
+                        case GOSSIP_ACTION_INFO_DEF +2:
+							pPlayer->CLOSE_GOSSIP_MENU();
+							break;        
+					}
+				}
+  
+				bool OnGossipSelect(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction)
+				{
+					if (uiSender == GOSSIP_SENDER_MAIN)
+					{
+                        SendDefaultMenu_ACTION(pPlayer, pCreature, uiAction);
+					}        
+					return true;
+				} 
 
         CreatureAI* GetAI(Creature* pCreature) const
         {
@@ -894,8 +904,8 @@ class boss_high_overlord_varok_saurfang : public CreatureScript
 								{
 										case DO_ACTION_BATTLE_START :
 											{
-												uint32 m_ALLIGSTRIGGER = RAID_MODE(NPC_ALLIGSTRIGGER_10, NPC_ALLIGSTRIGGER_25); // 600000, 1200000
-                                                uint32 m_HORDEGSTRIGGER = RAID_MODE(NPC_HORDEGSTRIGGER_10, NPC_HORDEGSTRIGGER_25); // 600000, 1200000
+												uint32 m_ALLIGSTRIGGER = RAID_MODE(NPC_ALLIGSTRIGGER_10, NPC_ALLIGSTRIGGER_25, NPC_ALLIGSTRIGGER_10, NPC_ALLIGSTRIGGER_25);
+                                                uint32 m_HORDEGSTRIGGER = RAID_MODE(NPC_HORDEGSTRIGGER_10, NPC_HORDEGSTRIGGER_25, NPC_HORDEGSTRIGGER_10, NPC_HORDEGSTRIGGER_25);
 
 												if (Creature *m_AlliGS = me->SummonCreature(m_ALLIGSTRIGGER, 18.637676f, 2247.624023f, 527.277039f))
 												{
@@ -907,17 +917,27 @@ class boss_high_overlord_varok_saurfang : public CreatureScript
 													instance->SendEncounterUnit(ENCOUNTER_FRAME_ADD, m_HordeGS);
 												}
 
-												if (Creature *canon = me->SummonCreature(NPC_GUNSHIP_CANNON_HORDE, -38.841675f, 2258.511963f, 526.378174f))
-													canon->SetOrientation(6.169659f);
-												if (Creature *canon = me->SummonCreature(NPC_GUNSHIP_CANNON_HORDE, -38.193577f, 2253.306885f, 526.427917f))
-													canon->SetOrientation(6.169659f);
-												if (Creature *canon = me->SummonCreature(NPC_GUNSHIP_CANNON_HORDE, -39.107193f, 2236.982422f, 526.979919f))
-													canon->SetOrientation(6.169659f);
-												if (Creature *canon = me->SummonCreature(NPC_GUNSHIP_CANNON_HORDE, -38.604717f, 2241.389404f, 526.657288f))
-													canon->SetOrientation(6.169659f);
+												uint32 Count = RAID_MODE(2, 4, 2, 4);
 
-												me->SummonCreature(NPC_CANONTRIGGER, 39.714436f, 2230.390625f, 528.113281f);
-												me->SummonCreature(NPC_CANONTRIGGER, 43.005005f, 2256.538574f, 528.131104f);
+												if (Count == 4)
+												{
+													if (Creature *canon = me->SummonCreature(NPC_GUNSHIP_CANNON_HORDE, -38.841675f, 2258.511963f, 526.378174f))
+														canon->SetOrientation(6.169659f);
+													if (Creature *canon = me->SummonCreature(NPC_GUNSHIP_CANNON_HORDE, -38.193577f, 2253.306885f, 526.427917f))
+														canon->SetOrientation(6.169659f);
+													if (Creature *canon = me->SummonCreature(NPC_GUNSHIP_CANNON_HORDE, -39.107193f, 2236.982422f, 526.979919f))
+														canon->SetOrientation(6.169659f);
+													if (Creature *canon = me->SummonCreature(NPC_GUNSHIP_CANNON_HORDE, -38.604717f, 2241.389404f, 526.657288f))
+														canon->SetOrientation(6.169659f);
+												}else{
+													if (Creature *canon = me->SummonCreature(NPC_GUNSHIP_CANNON_HORDE, -38.841675f, 2258.511963f, 526.378174f))
+														canon->SetOrientation(6.169659f);
+													if (Creature *canon = me->SummonCreature(NPC_GUNSHIP_CANNON_HORDE, -38.604717f, 2241.389404f, 526.657288f))
+														canon->SetOrientation(6.169659f);
+												}
+
+												//me->SummonCreature(NPC_CANONTRIGGER, 39.714436f, 2230.390625f, 528.113281f);
+												//me->SummonCreature(NPC_CANONTRIGGER, 43.005005f, 2256.538574f, 528.131104f);
 												
 												me->SummonCreature(NPC_FIGHTTRIGGER, 26.312359f, 2246.370850f, 527.267151f);
 											}
@@ -925,9 +945,6 @@ class boss_high_overlord_varok_saurfang : public CreatureScript
 											{
 												if (!bBattleStart)
 												{
-													health_theSkybreaker = RAID_MODE( 600000, 1200000);
-													health_ogrimsHammer = RAID_MODE( 600000, 1200000);
-
 													instance->SetBossState( DATA_GUNSHIP_BATTLE_EVENT, NOT_STARTED);
 													instance->SetData( DATA_GUNSHIP_EVENT, PHASE_NOT_STARTED);
 
@@ -1035,20 +1052,38 @@ class npc_sergeant : public CreatureScript
 
                         void Reset()
                         {
-                                timer_Spawn                             =       0;
+							Player *target = me->FindNearestPlayer(400);
+							me->AI()->AttackStart(target);
 
-                                timer_Bladestorm                =       7000;
-                                timer_WoundingStrike    =       urand( 10000, 12000);
-                                timer_BurningPitch              =       60000;
-                                timer_DesperateResolve  =       0; // -40% de Vida
+                            timer_Bladestorm                =       7000;
+                            timer_WoundingStrike    =       urand( 10000, 12000);
+                            timer_BurningPitch              =       60000;
+                            timer_DesperateResolve  =       0; // -40% de Vida
                         }
 
                         void UpdateAI( const uint32 diff) 
                         {
                                 timer_Spawn += diff;
                                 buffExp( this, timer_Spawn);
-                if (!UpdateVictim())
-                    return;
+
+								if (pInstance && pInstance->GetBossState(DATA_GUNSHIP_BATTLE_EVENT) == DONE)
+									me->Kill(me);
+
+								/*if (me->FindNearestPlayer(400)->GetTeamId() == TEAM_HORDE)
+								{
+									uint32 m_HORDEGSTRIGGER = RAID_MODE(NPC_HORDEGSTRIGGER_10, NPC_HORDEGSTRIGGER_25, NPC_HORDEGSTRIGGER_10, NPC_HORDEGSTRIGGER_25);
+									if (Creature *trigger = me->FindNearestCreature(m_HORDEGSTRIGGER, 30, true))
+										if (!me->IsWithinDistInMap(trigger, 25))
+											me->AttackStop();
+								}else{
+									uint32 m_ALLIGSTRIGGER = RAID_MODE(NPC_ALLIGSTRIGGER_10, NPC_ALLIGSTRIGGER_25, NPC_ALLIGSTRIGGER_10, NPC_ALLIGSTRIGGER_25);
+									if (Creature *trigger = me->FindNearestCreature(m_ALLIGSTRIGGER, 30, true))
+										if (!me->IsWithinDistInMap(trigger, 25))
+											me->AttackStop();
+								}*/
+
+								if (!UpdateVictim())
+									return;
 
                                 if( ( me->GetHealth() / me->GetMaxHealth()) <= 0.4) {
                                         if( timer_DesperateResolve <= diff) {
@@ -1083,7 +1118,7 @@ class npc_sergeant : public CreatureScript
                         uint32 timer_BurningPitch;
 
                         uint32 timer_Spawn;
-            InstanceScript* pInstance;
+						InstanceScript* pInstance;
                 };
 
         CreatureAI* GetAI(Creature* pCreature) const
@@ -1104,18 +1139,31 @@ class npc_skybreaker_rifleman : public CreatureScript
 
                         void Reset()
                         {
-                                timer_Spawn                             =       0;
+							Player *target = me->FindNearestPlayer(400);
+							me->AI()->AttackStart(target);
 
-                                timer_Shoot                             =       urand( 2000, 4000);
-                                timer_BurningPitch              =       60000;
+							timer_Shoot = urand( 2000, 4000);
+                            timer_BurningPitch = 60000;
+
+							me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_DISABLE_MOVE);
+                        }
+
+						void EnterCombat(Unit* /*who*/)
+                        {
+							me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_DISABLE_MOVE);
+							SetCombatMovement(false);
                         }
 
                         void UpdateAI( const uint32 diff)
                         {
                                 timer_Spawn += diff;
                                 buffExp( this, timer_Spawn);
-                if (!UpdateVictim())
-                    return;
+
+								if (pInstance && pInstance->GetBossState(DATA_GUNSHIP_BATTLE_EVENT) == DONE)
+									me->Kill(me);
+
+								 if (!UpdateVictim())
+									return;
 
                                 if( timer_BurningPitch <= diff) {
                                         if( Unit* pTarget = SelectTarget(SELECT_TARGET_RANDOM, 0, 10000, true)) {
@@ -1134,7 +1182,7 @@ class npc_skybreaker_rifleman : public CreatureScript
                         uint32 timer_BurningPitch;
                         
                         uint32 timer_Spawn;
-            InstanceScript* pInstance;
+						InstanceScript* pInstance;
                 };
 
         CreatureAI* GetAI(Creature* pCreature) const
@@ -1155,18 +1203,31 @@ class npc_korkron_axethrower : public CreatureScript
 
                         void Reset()
                         {
-                                timer_Spawn                             =       0;
+							Player *target = me->FindNearestPlayer(400);
+							me->AI()->AttackStart(target);
 
-                                timer_HurlAxe                   =       urand( 2000, 4000);
-                                timer_BurningPitch              =       60000;
+							timer_HurlAxe = urand( 2000, 4000);
+                            timer_BurningPitch = 60000;
+
+							me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_DISABLE_MOVE);
+                        }
+
+						void EnterCombat(Unit* /*who*/)
+                        {
+							me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_DISABLE_MOVE);
+							SetCombatMovement(false);
                         }
 
                         void UpdateAI( const uint32 diff)
                         {
                                 timer_Spawn += diff;
                                 buffExp( this, timer_Spawn);
-                if (!UpdateVictim())
-                    return;
+
+								if (pInstance && pInstance->GetBossState(DATA_GUNSHIP_BATTLE_EVENT) == DONE)
+									me->Kill(me);
+
+								if (!UpdateVictim())
+									return;
 
                                 if( timer_BurningPitch <= diff) {
                                         if( Unit* pTarget = SelectTarget(SELECT_TARGET_RANDOM, 0, 10000, true)) {
@@ -1185,7 +1246,7 @@ class npc_korkron_axethrower : public CreatureScript
                         uint32 timer_BurningPitch;
                         
                         uint32 timer_Spawn;
-            InstanceScript* pInstance;
+						InstanceScript* pInstance;
                 };
 
         CreatureAI* GetAI(Creature* pCreature) const
@@ -1206,18 +1267,36 @@ class npc_marine_or_reaver : public CreatureScript
 
                         void Reset()
                         {
-                                timer_Spawn                             =       0;
+                            Player *target = me->FindNearestPlayer(400);
+							me->AI()->AttackStart(target);
 
-                                timer_BurningPitch              =       60000;
-                                timer_DesperateResolve  =       0; // -40% de Vida
+                            timer_BurningPitch              =       60000;
+                            timer_DesperateResolve  =       0;
                         }
 
                         void UpdateAI( const uint32 diff)
                         {
                                 timer_Spawn += diff;
                                 buffExp( this, timer_Spawn);
-                if (!UpdateVictim())
-                    return;
+
+								if (pInstance && pInstance->GetBossState(DATA_GUNSHIP_BATTLE_EVENT) == DONE)
+									me->Kill(me);
+
+							/*if (me->FindNearestPlayer(400)->GetTeamId() == TEAM_HORDE)
+							{
+								uint32 m_HORDEGSTRIGGER = RAID_MODE(NPC_HORDEGSTRIGGER_10, NPC_HORDEGSTRIGGER_25, NPC_HORDEGSTRIGGER_10, NPC_HORDEGSTRIGGER_25);
+								if (Creature *trigger = me->FindNearestCreature(m_HORDEGSTRIGGER, 30, true))
+									if (!me->IsWithinDistInMap(trigger, 25))
+										me->AttackStop();
+							}else{
+								uint32 m_ALLIGSTRIGGER = RAID_MODE(NPC_ALLIGSTRIGGER_10, NPC_ALLIGSTRIGGER_25, NPC_ALLIGSTRIGGER_10, NPC_ALLIGSTRIGGER_25);
+								if (Creature *trigger = me->FindNearestCreature(m_ALLIGSTRIGGER, 30, true))
+									if (!me->IsWithinDistInMap(trigger, 25))
+										me->AttackStop();
+							}*/
+                           
+								if (!UpdateVictim())
+									return;
                                 
                                 if( ( me->GetHealth() / me->GetMaxHealth()) <= 0.4) {
                                         if( timer_DesperateResolve <= diff) {
@@ -1233,14 +1312,14 @@ class npc_marine_or_reaver : public CreatureScript
                                         }
                                 } else timer_BurningPitch -= diff;
 
-                DoMeleeAttackIfReady();
+							 DoMeleeAttackIfReady();
                         }
 
                         uint32 timer_DesperateResolve;
                         uint32 timer_BurningPitch;
                         
                         uint32 timer_Spawn;
-            InstanceScript* pInstance;
+						InstanceScript* pInstance;
                 };
 
         CreatureAI* GetAI(Creature* pCreature) const
@@ -1261,18 +1340,31 @@ class npc_mortar_soldier_or_rocketeer : public CreatureScript
 
                         void Reset()
                         {
-                                timer_Spawn                             =       0;
+							Player *target = me->FindNearestPlayer(400);
+							me->AI()->AttackStart(target);
 
-                                timer_RocketArtillery   =       urand( 10000, 15000);
-                                timer_BurningPitch              =       60000;
+							timer_RocketArtillery = urand( 10000, 15000);
+							timer_BurningPitch = 60000;
+
+							me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_DISABLE_MOVE);
+                        }
+
+						void EnterCombat(Unit* /*who*/)
+                        {
+							me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_DISABLE_MOVE);
+							SetCombatMovement(false);
                         }
 
                         void UpdateAI( const uint32 diff)
                         {
                                 timer_Spawn += diff;
                                 buffExp( this, timer_Spawn);
-                if (!UpdateVictim())
-                    return;
+
+								if (pInstance && pInstance->GetBossState(DATA_GUNSHIP_BATTLE_EVENT) == DONE)
+									me->Kill(me);
+
+							if (!UpdateVictim())
+								return;
                                 
                                 if( timer_BurningPitch <= diff) {
                                         if( Unit* pTarget = SelectTarget(SELECT_TARGET_RANDOM, 0, 10000, true)) {
@@ -1293,7 +1385,7 @@ class npc_mortar_soldier_or_rocketeer : public CreatureScript
                         uint32 timer_BurningPitch;
                         
                         uint32 timer_Spawn;
-            InstanceScript* pInstance;
+						InstanceScript* pInstance;
                 };
 
         CreatureAI* GetAI(Creature* pCreature) const
@@ -1314,18 +1406,28 @@ class npc_sorcerer_or_battle_mage : public CreatureScript
 
                         void Reset()
                         {
-                                timer_Spawn                             =       0;
-
                                 timer_BurningPitch              =       60000;
                                 timer_BelowZero                 =       urand( 10000, 15000);
+
+								me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_DISABLE_MOVE);
+                        }
+
+						void EnterCombat(Unit* /*who*/)
+                        {
+							me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_DISABLE_MOVE);
+							SetCombatMovement(false);
                         }
 
                         void UpdateAI( const uint32 diff)
                         {
                                 timer_Spawn += diff;
                                 buffExp( this, timer_Spawn);
-                if (!UpdateVictim())
-                    return;
+
+								if (pInstance && pInstance->GetBossState(DATA_GUNSHIP_BATTLE_EVENT) == DONE)
+									me->Kill(me);
+
+								if (!UpdateVictim())
+									return;
                                 
                                 if( timer_BurningPitch <= diff) {
                                         if( Unit* pTarget = SelectTarget(SELECT_TARGET_RANDOM, 0, 10000, true)) {
@@ -1346,7 +1448,7 @@ class npc_sorcerer_or_battle_mage : public CreatureScript
                         uint32 timer_BurningPitch;
                         
                         uint32 timer_Spawn;
-            InstanceScript* pInstance;
+						InstanceScript* pInstance;
                 };
 
         CreatureAI* GetAI(Creature* pCreature) const
@@ -1369,7 +1471,7 @@ class npc_combattrigger : public CreatureScript
 
                         void Reset()
                         {
-							CaseType = 0;
+							CaseType = 1;
 							CaseTimer = 10000;
 
 							me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE | UNIT_FLAG_OOC_NOT_ATTACKABLE | UNIT_FLAG_DISABLE_MOVE);
@@ -1378,17 +1480,26 @@ class npc_combattrigger : public CreatureScript
 							Map::PlayerList const &players = me->GetMap()->GetPlayers();
 							for (Map::PlayerList::const_iterator itr = players.begin(); itr != players.end(); ++itr)
 							{
-								Player* player = itr->getSource();
-								if (!player->isGameMaster())
-								{
+								player = itr->getSource();
+								//if (!player->isGameMaster()) // Not needet in Debug
+								//{
 									me->AI()->AttackStart(player);
 									break;
-								}
+								//}
 							}
+                        }
+
+						void EnterCombat(Unit* /*who*/)
+                        {
+							me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE | UNIT_FLAG_OOC_NOT_ATTACKABLE | UNIT_FLAG_DISABLE_MOVE);
+							SetCombatMovement(false);
                         }
 
                         void UpdateAI( const uint32 diff)
                         {
+							if (pInstance && pInstance->GetBossState(DATA_GUNSHIP_BATTLE_EVENT) == DONE)
+									me->Kill(me);
+
 							if (CaseTimer <= diff)
 							{
 								switch (CaseType)
@@ -1396,20 +1507,38 @@ class npc_combattrigger : public CreatureScript
 									case 1 :
 										{
 											// Sumon Portal
-											CaseTimer = 2000;
+											me->SummonCreature(NPC_PORTAL, -70.393806f, 2235.044678f, 526.761536f);
+											CaseTimer = 4000;
 											CaseType = 2;
 											break;
 										}
 									case 2:
 										{
-											// Summon Deffer
-											CaseTimer = 30000;
+											if(player->GetTeamId() == TEAM_HORDE)
+											{
+												// Summon Deffer
+												me->SummonCreature(NPC_SKYBREAKER_MORTAR_SOLDIER, 19.905600f, 2229.406738f, 526.922729f);
+												me->SummonCreature(NPC_SKYBREAKER_MORTAR_SOLDIER, 21.892221f, 2244.537354f, 526.904419f);
+												me->SummonCreature(NPC_SKYBREAKER_MORTAR_SOLDIER, 30.448759f, 2239.410156f, 526.872314f);
+												me->SummonCreature(NPC_SKYBREAKER_MORTAR_SOLDIER, 30.509739f, 2229.745361f, 526.906372f);
+												me->SummonCreature(NPC_SKYBREAKER_MORTAR_SOLDIER, 16.182817f, 2250.926025f, 526.981812f);
+												me->SummonCreature(NPC_SKYBREAKER_RIFLEMAN, -6.278732f, 2239.198975f, 528.106934f);
+												me->SummonCreature(NPC_SKYBREAKER_RIFLEMAN, -5.815511f, 2244.536865f, 528.089905f);
+												me->SummonCreature(NPC_SKYBREAKER_RIFLEMAN, -4.562603f, 2250.770508f, 528.068665f);
+											}else{
+											}
+											CaseTimer = 40000;
 											CaseType = 3;
 											break;
 										}
 									case 3:
 										{
-											// Summon BattleMage
+											if(player->GetTeamId() == TEAM_HORDE)
+											{
+												// Summon BattleMage
+												me->SummonCreature(NPC_SKYBREAKER_SORCERER, 18.254408f, 2242.593018f, 527.132568f);
+											}else{
+											}
 											CaseTimer = 10000;
 											CaseType = 1;
 											break;
@@ -1420,6 +1549,7 @@ class npc_combattrigger : public CreatureScript
 							}
 						}
 
+						Player* player;
 						uint32 CaseType;
                         uint32 CaseTimer;
 
@@ -1454,26 +1584,180 @@ class npc_GunShip_healthtrigger : public CreatureScript
 							Map::PlayerList const &players = me->GetMap()->GetPlayers();
 							for (Map::PlayerList::const_iterator itr = players.begin(); itr != players.end(); ++itr)
 							{
-								Player* player = itr->getSource();
-								if (!player->isGameMaster())
-								{
+								player = itr->getSource();
+								//if (!player->isGameMaster()) // Not needet in Debug
+								//{
 									me->AI()->AttackStart(player);
 									break;
-								}
+								//}
 							}
+                        }
+
+						void EnterCombat(Unit* /*who*/)
+                        {
+							me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_DISABLE_MOVE);
+							SetCombatMovement(false);
                         }
 
                         void UpdateAI( const uint32 diff)
                         {
-							
+							if (pInstance && pInstance->GetBossState(DATA_GUNSHIP_BATTLE_EVENT) == DONE)
+								me->Kill(me);
+
+							if(player->GetTeamId() == TEAM_HORDE)
+							{
+								m_me = me->GetEntry();
+								if (m_me == RAID_MODE(NPC_HORDEGSTRIGGER_10, NPC_HORDEGSTRIGGER_25, NPC_HORDEGSTRIGGER_10, NPC_HORDEGSTRIGGER_25))
+								{
+									Creature *alligs = me->FindNearestCreature(RAID_MODE(NPC_ALLIGSTRIGGER_10, NPC_ALLIGSTRIGGER_25, NPC_ALLIGSTRIGGER_10, NPC_ALLIGSTRIGGER_25),400);
+									if(me->isAlive() && !alligs->isAlive())
+									{
+										pInstance->SetBossState(DATA_GUNSHIP_BATTLE_EVENT, DONE);
+										Map::PlayerList const &players = me->GetMap()->GetPlayers();
+										for (Map::PlayerList::const_iterator itr = players.begin(); itr != players.end(); ++itr)
+										{
+											Player *Aplayer = itr->getSource();
+											//if (!player->isGameMaster()) // Not needet in Debug
+											//{
+												pInstance->DoCompleteAchievement(RAID_MODE(IM_ON_A_BOAT_10,IM_ON_A_BOAT_25));
+												break;
+											//}
+										}
+										me->Kill(me);
+									}
+								}else{
+									Creature *hordegs = me->FindNearestCreature(RAID_MODE(NPC_HORDEGSTRIGGER_10, NPC_HORDEGSTRIGGER_25, NPC_HORDEGSTRIGGER_10, NPC_HORDEGSTRIGGER_25),400);
+									if(me->isAlive() && !hordegs->isAlive())
+									{
+										pInstance->SetBossState(DATA_GUNSHIP_BATTLE_EVENT, DONE);
+										pInstance->SetBossState(DATA_GUNSHIP_BATTLE_EVENT, NOT_STARTED);
+										me->Kill(me);
+									}
+								}	
+							}else{
+								m_me = me->GetEntry();
+								if (m_me == RAID_MODE(NPC_HORDEGSTRIGGER_10, NPC_HORDEGSTRIGGER_25, NPC_HORDEGSTRIGGER_10, NPC_HORDEGSTRIGGER_25))
+								{
+									Creature *alligs = me->FindNearestCreature(RAID_MODE(NPC_ALLIGSTRIGGER_10, NPC_ALLIGSTRIGGER_25, NPC_ALLIGSTRIGGER_10, NPC_ALLIGSTRIGGER_25),400);
+									if(me->isAlive() && !alligs->isAlive())
+									{
+										pInstance->SetBossState(DATA_GUNSHIP_BATTLE_EVENT, DONE);
+										pInstance->SetBossState(DATA_GUNSHIP_BATTLE_EVENT, NOT_STARTED);
+										me->Kill(me);
+									}
+								}else{
+									Creature *hordegs = me->FindNearestCreature(RAID_MODE(NPC_HORDEGSTRIGGER_10, NPC_HORDEGSTRIGGER_25, NPC_HORDEGSTRIGGER_10, NPC_HORDEGSTRIGGER_25),400);
+									if(me->isAlive() && !hordegs->isAlive())
+									{
+										pInstance->SetBossState(DATA_GUNSHIP_BATTLE_EVENT, DONE);
+										Map::PlayerList const &players = me->GetMap()->GetPlayers();
+										for (Map::PlayerList::const_iterator itr = players.begin(); itr != players.end(); ++itr)
+										{
+											Player *Aplayer = itr->getSource();
+											//if (!player->isGameMaster()) // Not needet in Debug
+											//{
+												pInstance->DoCompleteAchievement(RAID_MODE(IM_ON_A_BOAT_10,IM_ON_A_BOAT_25));
+												break;
+											//}
+										}
+										me->Kill(me);
+									}
+								}
+							}
 						}
 
+						uint32 m_me;
+						Player* player;
 						InstanceScript* pInstance;
                 };
 
         CreatureAI* GetAI(Creature* pCreature) const
         {
             return new npc_GunShip_healthtriggerAI(pCreature);
+        }
+};
+
+class npc_portal_icc : public CreatureScript
+{
+    public:
+        npc_portal_icc() : CreatureScript("npc_portal_icc") { }
+
+                struct npc_portal_iccAI : public ScriptedAI
+                {
+                        npc_portal_iccAI(Creature* pCreature) : ScriptedAI(pCreature)
+						{ 
+							pInstance = me->GetInstanceScript(); 
+						}
+
+                        void Reset()
+                        {
+							SummonTimer = urand(2000, 4000);
+							SummonCount = RAID_MODE(4, 7, 5, 8);
+							CurrentCount = 0;
+
+							me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_DISABLE_MOVE | UNIT_FLAG_NON_ATTACKABLE | UNIT_FLAG_OOC_NOT_ATTACKABLE | UNIT_FLAG_NOT_SELECTABLE);
+
+							Map::PlayerList const &players = me->GetMap()->GetPlayers();
+							for (Map::PlayerList::const_iterator itr = players.begin(); itr != players.end(); ++itr)
+							{
+								pPlayer = itr->getSource();
+								//if (!pPlayer->isGameMaster()) // Not needet in Debug
+								//{
+									me->AI()->AttackStart(pPlayer);
+									break;
+								//}
+							}
+                        }
+
+						void EnterCombat(Unit* /*who*/)
+                        {
+							me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_DISABLE_MOVE | UNIT_FLAG_NON_ATTACKABLE | UNIT_FLAG_OOC_NOT_ATTACKABLE | UNIT_FLAG_NOT_SELECTABLE);
+							SetCombatMovement(false);
+                        }
+						
+						void SummonOffer(uint32 data)
+						{
+							if(pPlayer->GetTeamId() == TEAM_HORDE)
+							{
+								if(data == 1)
+									me->SummonCreature(NPC_SKYBREAKER_SERGEANT, me->GetPositionX(), me->GetPositionY(), me->GetPositionZ());
+								else if(data == 2)
+									me->SummonCreature(NPC_SKYBREAKER_MARINE, me->GetPositionX(), me->GetPositionY(), me->GetPositionZ());
+							}
+						}
+
+                        void UpdateAI( const uint32 diff)
+                        {
+							if (pInstance && pInstance->GetBossState(DATA_GUNSHIP_BATTLE_EVENT) == DONE)
+								me->Kill(me);
+
+							if (SummonTimer <= diff)
+							{
+								if (CurrentCount < SummonCount)
+								{
+									SummonTimer = urand(500, 2000);
+									SummonOffer(urand(1,2));
+									CurrentCount++;
+								}else{
+									me->SetVisible(false);
+									me->Kill(me);
+								}
+							}else{
+								SummonTimer -= diff;
+							}
+							
+						}
+
+						Player* pPlayer;
+						uint32 CurrentCount;
+						uint32 SummonCount;
+						uint32 SummonTimer;
+						InstanceScript* pInstance;
+                };
+
+        CreatureAI* GetAI(Creature* pCreature) const
+        {
+            return new npc_portal_iccAI(pCreature);
         }
 };
 
@@ -1490,4 +1774,5 @@ void AddSC_boss_gunship_battle()
         new boss_high_overlord_varok_saurfang();
 		new npc_combattrigger();
 		new npc_GunShip_healthtrigger();
+		new npc_portal_icc();
 }
