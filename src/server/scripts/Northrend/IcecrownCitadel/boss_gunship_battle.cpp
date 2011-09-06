@@ -1285,20 +1285,6 @@ class npc_combattrigger : public CreatureScript
 							SetCombatMovement(false);
                         }
 
-						void JustDied(Unit* /*killer*/)
-						{
-							if(me->GetEntry() == RAID_MODE(NPC_HORDEGSTRIGGER_10, NPC_HORDEGSTRIGGER_25, NPC_HORDEGSTRIGGER_10, NPC_HORDEGSTRIGGER_25))
-							{
-								pInstance->SetBossState(DATA_GUNSHIP_BATTLE_EVENT, DONE);
-								pInstance->SetBossState(DATA_GUNSHIP_BATTLE_EVENT, NOT_STARTED);
-							}
-							if(me->GetEntry() == RAID_MODE(NPC_ALLIGSTRIGGER_10, NPC_ALLIGSTRIGGER_25, NPC_ALLIGSTRIGGER_10, NPC_ALLIGSTRIGGER_25))
-							{
-								pInstance->SetBossState(DATA_GUNSHIP_BATTLE_EVENT, DONE);
-								pInstance->DoCompleteAchievement(RAID_MODE(IM_ON_A_BOAT_10,IM_ON_A_BOAT_25));
-							}
-						}
-
                         void UpdateAI( const uint32 diff)
                         {
 							if (pInstance && pInstance->GetBossState(DATA_GUNSHIP_BATTLE_EVENT) == DONE)
@@ -1389,6 +1375,20 @@ class npc_GunShip_healthtrigger : public CreatureScript
 								//}
 							}
                         }
+
+						void JustDied(Unit* /*killer*/)
+						{
+							if(me->GetEntry() == RAID_MODE(NPC_HORDEGSTRIGGER_10, NPC_HORDEGSTRIGGER_25, NPC_HORDEGSTRIGGER_10, NPC_HORDEGSTRIGGER_25))
+							{
+								pInstance->SetBossState(DATA_GUNSHIP_BATTLE_EVENT, DONE);
+								pInstance->SetBossState(DATA_GUNSHIP_BATTLE_EVENT, NOT_STARTED);
+							}
+							if(me->GetEntry() == RAID_MODE(NPC_ALLIGSTRIGGER_10, NPC_ALLIGSTRIGGER_25, NPC_ALLIGSTRIGGER_10, NPC_ALLIGSTRIGGER_25))
+							{
+								pInstance->SetBossState(DATA_GUNSHIP_BATTLE_EVENT, DONE);
+								pInstance->DoCompleteAchievement(RAID_MODE(IM_ON_A_BOAT_10,IM_ON_A_BOAT_25));
+							}
+						}
 
 						void EnterCombat(Unit* /*who*/)
                         {
