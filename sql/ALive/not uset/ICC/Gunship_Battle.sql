@@ -54,7 +54,7 @@ INSERT IGNORE INTO npc_spellclick_spells VALUES (36839, 65403, 0, 0, 0, 1, 0, 0,
 
 UPDATE `creature_template` SET `VehicleId`=554 WHERE `entry` IN ('36838', '36839');
 
-UPDATE `creature_template` SET `Health_mod` = '65.5185', `Spell1` = '69400', `Spell2` = '70174' WHERE `entry` IN ('36838', '36839');
+UPDATE `creature_template` SET `Health_mod` = '65.5185', `Spell1` = '69399', `Spell2` = '70174' WHERE `entry` IN ('36838', '36839');
 
 -- ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
