@@ -262,6 +262,19 @@ struct boss_twin_baseAI : public ScriptedAI
                     m_pInstance->SetData(DATA_HEALTH_TWIN_SHARED, me->GetHealth() + me->CountPctFromMaxHealth(spell->Effects[EFFECT_0].CalcValue()));
     }
 
+	//Shiro
+	void SpellHitTarget(Unit* target, const SpellInfo *spell)
+	{
+		if (spell->Id == SPELL_DARK_TOUCH)
+			if (!target->isTotem())
+				target->CastSpell(target, SPELL_EMPOWERED_DARK);
+
+		if (spell->Id == SPELL_LIGHT_TOUCH)
+			if (!target->isTotem())
+				target->CastSpell(target, SPELL_EMPOWERED_LIGHT);
+	}
+	//Shiro
+
     void SummonColorballs(uint8 quantity)
     {
         float x0 = ToCCommonLoc[1].GetPositionX(), y0 = ToCCommonLoc[1].GetPositionY(), r = 47.0f;
