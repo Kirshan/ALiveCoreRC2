@@ -218,6 +218,13 @@ class boss_black_knight : public CreatureScript
             if (!UpdateVictim())
                 return;  
 
+			// Shiro
+			if (bStartCombat == false)
+				me->SetFlag(UNIT_FIELD_FLAGS,UNIT_FLAG_NON_ATTACKABLE);
+			else
+				me->RemoveFlag(UNIT_FIELD_FLAGS,UNIT_FLAG_NON_ATTACKABLE);
+			// Shiro
+
             if (bEventInProgress)
                 if (uiResurrectTimer <= uiDiff)
                 {
