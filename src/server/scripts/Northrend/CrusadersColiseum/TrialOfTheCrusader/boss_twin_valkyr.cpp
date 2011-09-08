@@ -266,11 +266,11 @@ struct boss_twin_baseAI : public ScriptedAI
 	void SpellHitTarget(Unit* target, const SpellInfo *spell)
 	{
 		if (spell->Id == SPELL_DARK_TOUCH)
-			if (!target->isTotem())
+			if (!target->isTotem() && !target->isPet())
 				target->CastSpell(target, SPELL_EMPOWERED_DARK);
 
 		if (spell->Id == SPELL_LIGHT_TOUCH)
-			if (!target->isTotem())
+			if (!target->isTotem() && !target->isPet())
 				target->CastSpell(target, SPELL_EMPOWERED_LIGHT);
 	}
 	//Shiro
