@@ -258,6 +258,14 @@ class generic_vehicleAI_toc5 : public CreatureScript
 		    hasBeenInCombat = true;
             DoCastSpellShield();
         }
+
+		// Shiro
+		void JustDied(Unit* /*killer*/)
+		{
+			me->RemoveFromWorld();
+		}
+		// Shiro
+
 	    bool CheckPlayersAlive()
 	    {
 		    Map* pMap = me->GetMap();
