@@ -314,7 +314,7 @@ class boss_paletress : public CreatureScript
             bDone = false;
     		
             if (Creature* pMemory = Unit::GetCreature(*me, MemoryGUID))
-                if (pMemory->isAlive())
+                if (!pMemory->isAlive())
                     pMemory->RemoveFromWorld();
 
 		    Map* pMap = me->GetMap();
@@ -540,6 +540,7 @@ class npc_memory : public CreatureScript
 
         void Reset()
         {
+			me->setFaction(14);
             uiOldWoundsTimer = 12000;
             uiShadowPastTimer = 5000;
             uiWakingNightmare = 7000;
