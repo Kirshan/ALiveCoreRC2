@@ -43,7 +43,7 @@ DELETE FROM disables WHERE sourceType = 4 AND entry IN
 -- ##########################################################
 -- Flame Leviathan
 -- ##########################################################
-UPDATE `creature_template` SET `script_name` = 'npc_liquid_pyrite' WHERE `entry` = '33189';
+UPDATE `creature_template` SET `ScriptName` = 'npc_liquid_pyrite' WHERE `entry` = '33189';
 DELETE FROM `spell_script_names` WHERE `spell_id` = '62363';
 INSERT INTO `spell_script_names` (`spell_id`, `ScriptName`) VALUES ('62363', 'spell_anti_air_rocket');
 
