@@ -140,6 +140,9 @@ public:
           // if (pDummyTarget && pDummyTarget->isSummon())
           // pDummyTarget->ForcedDespawn();
 
+			if (pClone && pClone->isAlive())
+				pClone->ForcedDespawn();
+
             DoScriptText(-1666303,me);
             pInstance->SetData(TYPE_BALTHARUS, DONE);
         }
