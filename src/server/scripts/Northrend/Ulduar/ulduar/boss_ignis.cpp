@@ -215,21 +215,21 @@ class boss_ignis : public CreatureScript
                             events.ScheduleEvent(EVENT_JET, urand(35000, 40000));
                             break;
                         case EVENT_SLAG_POT:
-							Unit* targetold = me->getVictim();
-							if (Creature* summon = me->FindNearestCreature(NPC_IRON_CONSTRUCT, 200, true))
-								if (Unit* target = SelectTarget(SELECT_TARGET_RANDOM, 0, 100, true))
-									if (target != summon->getVictim() && target != targetold)
-									{
-										DoScriptText(SAY_SLAG_POT, me);
-										_slagPotGUID = target->GetGUID();
-										DoCast(target, SPELL_GRAB);
-										events.DelayEvents(3000);
-										events.ScheduleEvent(EVENT_GRAB_POT, 500);
-										events.ScheduleEvent(EVENT_SLAG_POT, RAID_MODE(30000, 15000));
-										break;
-									}
-									else
-										break;
+							if (Unit* targetold = me->getVictim())
+								if (Creature* summon = me->FindNearestCreature(NPC_IRON_CONSTRUCT, 500, true))
+									if (Unit* target = SelectTarget(SELECT_TARGET_RANDOM, 0, 100, true))
+										if (target != summon->getVictim() && target != targetold)
+										{
+											DoScriptText(SAY_SLAG_POT, me);
+											_slagPotGUID = target->GetGUID();
+											DoCast(target, SPELL_GRAB);
+											events.DelayEvents(3000);
+											events.ScheduleEvent(EVENT_GRAB_POT, 500);
+											events.ScheduleEvent(EVENT_SLAG_POT, RAID_MODE(30000, 15000));
+											break;
+										}
+										else
+											break;
                         case EVENT_GRAB_POT:
                             if (Unit* slagPotTarget = ObjectAccessor::GetUnit(*me, _slagPotGUID))
                             {
