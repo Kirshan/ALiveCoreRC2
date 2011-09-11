@@ -3389,6 +3389,10 @@ void SpellMgr::LoadDbcDataCorrections()
             spellInfo->EffectImplicitTargetB[0] = TARGET_UNIT_TARGET_ANY;
             spellInfo->Effect[1] = 0;
             break;
+		case 51678: //WintergraspSiegeEngine Ram set damage radius to 5 yards
+			spellInfo->EffectRadiusIndex[0] = 52;
+			spellInfo->EffectRadiusIndex[1] = 52;
+			break;
         default:
             break;
         }
