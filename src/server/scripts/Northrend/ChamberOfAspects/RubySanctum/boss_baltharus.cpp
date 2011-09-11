@@ -201,11 +201,11 @@ public:
             if(pDoneBy->GetGUID() == me->GetGUID())
               return;
 
-            if (pClone && pClone->isAlive())
+            /*if (pClone && pClone->isAlive())
             {
                 pDoneBy->DealDamage(pClone, uiDamage, NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, false);
                 uiDamage = 0;
-            }
+            }*/
         }
 
         void UpdateAI(const uint32 diff)
