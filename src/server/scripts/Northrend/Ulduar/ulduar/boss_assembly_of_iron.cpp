@@ -1009,8 +1009,6 @@ class boss_stormcaller_brundir : public CreatureScript
                     }
                 }
 
-                if (!me->HasAura(RAID_MODE(SPELL_LIGHTNING_TENDRILS, SPELL_LIGHTNING_TENDRILS_H)))
-                    DoMeleeAttackIfReady();
             }
 
         private:
