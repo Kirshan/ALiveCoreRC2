@@ -41,7 +41,7 @@ DELETE FROM disables WHERE sourceType = 4 AND entry IN
 10404,10583,10361,10362,10364);
 
 -- ##########################################################
--- Leviathan
+-- Flame Leviathan
 -- ##########################################################
 UPDATE `creature_template` SET `script_name` = 'npc_liquid_pyrite' WHERE `entry` = '33189';
 DELETE FROM `spell_script_names` WHERE `spell_id` = '62363';
