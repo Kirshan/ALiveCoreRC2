@@ -1135,7 +1135,7 @@ public:
 				}
 			}
 			
-			if (m_timer > 20000 && m_timer < 30000)
+			if (m_timer > 20000 && m_timer < 35000)
 			{
 				m_pulsar_N->CastSpell(m_pulsar_S, SPELL_TWILIGHT_CUTTER_CHANNEL, true);
 
