@@ -7,5 +7,5 @@ UPDATE `creature_template` SET `ScriptName`='npc_darkrune_guardian' WHERE `entry
 UPDATE `creature_template` SET `ScriptName`='npc_darkrune_sentinel' WHERE `entry`=33846;
 UPDATE `creature_template` SET `ScriptName`='npc_darkrune_watcher' WHERE `entry`=33453;
 
-INSERT INTO `spell_script_names` (`spell_id`,`ScriptName`) VALUES
+INSERT IGNORE INTO `spell_script_names` (`spell_id`,`ScriptName`) VALUES
 ( 63308, 'spell_razorscale_devouring_flame');
