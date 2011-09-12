@@ -1453,9 +1453,6 @@ public:
 
         void UpdateAI(const uint32 diff)
         {
-            if(m_pInstance && m_pInstance->GetData(TYPE_HALION) != IN_PROGRESS)
-                me->ForcedDespawn();
-
             if (m_uiConsumptTimer <= diff)
             {
                 me->ForcedDespawn();
