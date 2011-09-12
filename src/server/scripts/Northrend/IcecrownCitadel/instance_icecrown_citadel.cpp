@@ -94,6 +94,7 @@ class instance_icecrown_citadel : public InstanceMapScript
                 DeathbringerSaurfangDoorGUID = 0;
                 DeathbringerSaurfangEventGUID = 0;
                 DeathbringersCacheGUID = 0;
+				GunshipCacheGUID = 0;
                 SaurfangTeleportGUID = 0;
                 PlagueSigilGUID = 0;
                 BloodwingSigilGUID = 0;
@@ -144,6 +145,14 @@ class instance_icecrown_citadel : public InstanceMapScript
 				hordeGS2 = 0;
 				alliGS = 0;
 				alliGS2 = 0;
+				uiHealthtriggerGUID = 0;
+
+				if(GetBossState(DATA_GUNSHIP_BATTLE_EVENT) != DONE)
+				{
+					IsGunshipFightFinish = false;
+				}else{
+					IsGunshipFightFinish = true;
+				}
             }
 
             void FillInitialWorldStates(WorldPacket& data)
@@ -173,6 +182,8 @@ class instance_icecrown_citadel : public InstanceMapScript
 
                 switch (creature->GetEntry())
                 {
+					case DATA_ALLIGS_HEALTH_TRIGGER:
+						uiHealthtriggerGUID = creature->GetGUID();
                     case NPC_KOR_KRON_GENERAL:
                         if (TeamInInstance == ALLIANCE)
                             creature->UpdateEntry(NPC_ALLIANCE_COMMANDER, ALLIANCE);
@@ -406,6 +417,12 @@ class instance_icecrown_citadel : public InstanceMapScript
                     case GO_DEATHBRINGER_S_CACHE_25H:
                         DeathbringersCacheGUID = go->GetGUID();
                         break;
+					/*case GO_GUNSHIP_CACHE_10N:
+					case GO_GUNSHIP_CACHE 25N:
+					case GO_GUNSHIP_CACHAE_10H:
+					case GO_GUNSHIP_CACHE_25H:
+						GunshipCacheGUID = go->GetGUID();
+						break;*/
                     case GO_SCOURGE_TRANSPORTER_SAURFANG:
                         SaurfangTeleportGUID = go->GetGUID();
                         break;
@@ -561,6 +578,8 @@ class instance_icecrown_citadel : public InstanceMapScript
                         return BloodQuickeningState;
                     case DATA_HEROIC_ATTEMPTS:
                         return HeroicAttempts;
+					case DATA_GUNSHIP_EVENT:
+						return IsGunshipFightFinish;
                     default:
                         break;
                 }
@@ -572,6 +591,8 @@ class instance_icecrown_citadel : public InstanceMapScript
             {
                 switch (type)
                 {
+				case DATA_ALLIGS_HEALTH_TRIGGER:
+					return uiHealthtriggerGUID;
                     case DATA_DEATHBRINGER_SAURFANG:
                         return DeathbringerSaurfangGUID;
                     case DATA_SAURFANG_EVENT_NPC:
@@ -666,7 +687,7 @@ class instance_icecrown_citadel : public InstanceMapScript
                 switch (type)
                 {
                     case DATA_LADY_DEATHWHISPER:
-                        SetBossState(DATA_GUNSHIP_BATTLE_EVENT, state);    // TEMP HACK UNTIL GUNSHIP SCRIPTED
+                        //SetBossState(DATA_GUNSHIP_BATTLE_EVENT, state);    // TEMP HACK UNTIL GUNSHIP SCRIPTED
                         if (state == DONE)
                         {
                             if (GameObject* elevator = instance->GetGameObject(LadyDeathwisperElevatorGUID))
@@ -676,6 +697,14 @@ class instance_icecrown_citadel : public InstanceMapScript
                             }
                         }
                         break;
+					case DATA_GUNSHIP_BATTLE_EVENT:
+						{/*
+							switch (state)
+								case DONE:
+									DoRespawnGameObject(DeathbringersCacheGUID, 7*DAY);
+								default:
+									break;
+						*/}
                     case DATA_DEATHBRINGER_SAURFANG:
                         switch (state)
                         {
@@ -794,6 +823,9 @@ class instance_icecrown_citadel : public InstanceMapScript
             {
                 switch (type)
                 {
+					case DATA_GUNSHIP_EVENT:
+						IsGunshipFightFinish = data ? true : false;;
+						break;
                     case DATA_BONED_ACHIEVEMENT:
                         IsBonedEligible = data ? true : false;
                         break;
@@ -1197,6 +1229,7 @@ class instance_icecrown_citadel : public InstanceMapScript
             uint64 DeathbringerSaurfangDoorGUID;
             uint64 DeathbringerSaurfangEventGUID;   // Muradin Bronzebeard or High Overlord Saurfang
             uint64 DeathbringersCacheGUID;
+			uint64 GunshipCacheGUID;
             uint64 SaurfangTeleportGUID;
             uint64 PlagueSigilGUID;
             uint64 BloodwingSigilGUID;
@@ -1245,10 +1278,12 @@ class instance_icecrown_citadel : public InstanceMapScript
 			uint64 hordeGS2;
 			uint64 alliGS;
 			uint64 alliGS2;
+			uint64 uiHealthtriggerGUID;
             bool IsBonedEligible;
             bool IsOozeDanceEligible;
             bool IsNauseaEligible;
             bool IsOrbWhispererEligible;
+			bool IsGunshipFightFinish;
         };
 
         InstanceScript* GetInstanceScript(InstanceMap* map) const

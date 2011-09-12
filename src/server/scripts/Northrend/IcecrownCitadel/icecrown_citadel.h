@@ -82,6 +82,7 @@ enum DataTypes
     DATA_THE_LICH_KING              = 12,
 
     // Additional data
+	DATA_ALLIGS_HEALTH_TRIGGER		= 53,
 	DATA_GUNSHIP_EVENT              = 52,
     DATA_SAURFANG_EVENT_NPC         = 13,
     DATA_BONED_ACHIEVEMENT          = 14,
@@ -320,6 +321,10 @@ enum GameObjectsIds
 	GO_ALLI_GUNSHIP						    = 1914902,
 	GO_HORDE_GUNSHIP_2					    = 1915001,
 	GO_ALLI_GUNSHIP_2					    = 1914901,
+	GO_GUNSHIP_CACHE_10N			        = 202239,
+    GO_GUNSHIP_CACHE_25N					= 202240,
+    GO_GUNSHIP_CACHE_10H				    = 202238,
+    GO_GUNSHIP_CACHE_25H					= 202241,
 
     // Deathbringer Saurfang
     GO_SAURFANG_S_DOOR                      = 201825,
