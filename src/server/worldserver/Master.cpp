@@ -1,6 +1,7 @@
 /*
  * Copyright (C) 2008-2011 TrinityCore <http://www.trinitycore.org/>
  * Copyright (C) 2005-2009 MaNGOS <http://getmangos.com/>
+ * Copyright (C) 2010-2011 ALiveCore <http://www.wow-alive.de/>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
@@ -132,10 +133,11 @@ int Master::Run()
     sLog->outString(" / ___ \\| |___| |\\ V /  __/");
     sLog->outString("/_/   \\_\\_____|_| \\_/ \\___|");
     sLog->outString("C O R E");
-
-	sLog->outString(" ");
-	sLog->outString("http://wow-alive.de/");
-	sLog->outString(" ");
+    sLog->outString(" ");
+    sLog->outString("  ALiveCore 2011(c) World of Warcraft Server Emulation");
+    sLog->outString(" ");
+    sLog->outString("http://wow-alive.de/");
+    sLog->outString(" ");
 
 #ifdef USE_SFMT_FOR_RNG
     sLog->outString("\n");
