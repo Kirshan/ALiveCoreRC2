@@ -1,6 +1,8 @@
 /*
  * Copyright (C) 2008-2010 TrinityCore <http://www.trinitycore.org/>
  *
+ * Copyright (C) Blackcore, Desarrollo completo Blackcore.
+ *
  * Copyright (C) ALiveCore 2011-2012 <wow-alive.de>
  *
  * This program is free software; you can redistribute it and/or modify
