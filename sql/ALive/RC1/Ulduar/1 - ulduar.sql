@@ -587,8 +587,8 @@ UPDATE `gameobject_template` SET `ScriptName` = 'go_celestial_console' WHERE `en
 UPDATE `gameobject_template` SET `flags` = 34 WHERE `entry` = 194628;
 
 DELETE FROM `creature` WHERE `id`=32871;
-INSERT INTO `creature` (`guid`,`id`,`map`,`spawnMask`,`phaseMask`,`modelid`,`equipment_id`,`position_x`,`position_y`,`position_z`,`orientation`,`spawntimesecs`,`spawndist`,`currentwaypoint`,`curhealth`,`curmana`,`DeathState`,`MovementType`,`npcflag`,`unit_flags`,`dynamicflags`) VALUES
-(255916, 32871, 603, 1, 1, 0, 28053, 1632.11, -303.365, 432.321, 1.57079, 300, 0, 0, 8367000, 0, 0, 0, 0, 0, 0);
+INSERT INTO `creature` (`guid`,`id`,`map`,`spawnMask`,`phaseMask`,`modelid`,`equipment_id`,`position_x`,`position_y`,`position_z`,`orientation`,`spawntimesecs`,`spawndist`,`currentwaypoint`,`curhealth`,`curmana`,`MovementType`,`npcflag`,`unit_flags`,`dynamicflags`) VALUES
+(255916, 32871, 603, 1, 1, 0, 28053, 1632.11, -303.365, 432.321, 1.57079, 300, 0, 0, 8367000, 0, 0, 0, 0, 0);
 
 DELETE FROM `gameobject` WHERE `id`=194628;
 INSERT INTO `gameobject` (`guid`,`id`,`map`,`spawnMask`,`phaseMask`,`position_x`,`position_y`,`position_z`,`orientation`,`rotation0`,`rotation1`,`rotation2`,`rotation3`,`spawntimesecs`,`animprogress`,`state`) VALUES
