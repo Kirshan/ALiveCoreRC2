@@ -143,6 +143,7 @@ public:
         uint32 m_uiFieryTimer;
         uint32 m_uiMeteorTimer;
         uint32 m_uiTailLashTimer;
+		uint32 m_uiCheckTimer;
         bool MovementStarted;
 
         void Reset()
@@ -168,6 +169,7 @@ public:
             m_uiFieryTimer = urand(30*IN_MILLISECONDS,40*IN_MILLISECONDS);
             m_uiMeteorTimer = urand(30*IN_MILLISECONDS,35*IN_MILLISECONDS);
             m_uiTailLashTimer = urand(15*IN_MILLISECONDS,25*IN_MILLISECONDS);
+			m_uiCheckTimer = 700;
 			Rdmg = 0;
             SetCombatMovement(true);
             me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
@@ -338,22 +340,28 @@ public:
 
         void UpdateAI(const uint32 uiDiff)
         {
-			// MARK_OF_COMBUSTION should not be on the players they did not have SPELL_FIERY_COMBUSTION active so remove the buff
-			Map::PlayerList const &PlayerList = me->GetMap()->GetPlayers();
-            if( !PlayerList.isEmpty()) 
+			// Make SPELL_FIERY_COMBUSTION and SPELL_SOUL_CONSUMPTION works
+			if (m_uiCheckTimer < uiDiff)
 			{
-				for(Map::PlayerList::const_iterator i = PlayerList.begin(); i != PlayerList.end(); ++i) 
+				Map::PlayerList const &PlayerList = me->GetMap()->GetPlayers();
+				if( !PlayerList.isEmpty()) 
 				{
-					if( Player *pCurrent = i->getSource()) 
+					for(Map::PlayerList::const_iterator i = PlayerList.begin(); i != PlayerList.end(); ++i) 
 					{
-						if (!pCurrent->HasAura(SPELL_FIERY_COMBUSTION))
-							pCurrent->RemoveAura(SPELL_MARK_OF_COMBUSTION);
+						if( Player *pCurrent = i->getSource()) 
+						{
+							if (!pCurrent->HasAura(SPELL_FIERY_COMBUSTION))
+								if (pCurrent->HasAura(SPELL_MARK_OF_COMBUSTION))
+									me->SummonCreature(NPC_COMBUSTION, pCurrent->GetPositionX(), pCurrent->GetPositionY(), pCurrent->GetPositionZ());
 
-						if (!pCurrent->HasAura(SPELL_SOUL_CONSUMPTION))
-							pCurrent->RemoveAura(SPELL_MARK_OF_CONSUMPTION);
+							if (!pCurrent->HasAura(SPELL_SOUL_CONSUMPTION))
+								if (pCurrent->HasAura(SPELL_MARK_OF_CONSUMPTION))
+									me->SummonCreature(NPC_CONSUMPTION, pCurrent->GetPositionX(), pCurrent->GetPositionY(), pCurrent->GetPositionZ());
+						}
 					}
+					m_uiCheckTimer = 700;
 				}
-			}
+			}else m_uiCheckTimer -= uiDiff;
 
             if (!pInstance)
                 return;
@@ -586,6 +594,7 @@ public:
         uint32 m_uiDarkBreathTimer;
         uint32 m_uiSoulCunsumTimer;
         uint32 m_uiTailLashTimer;
+		uint32 m_uiCheckTimer;
 
         void Reset()
         {
@@ -600,6 +609,7 @@ public:
             m_uiDarkBreathTimer = urand(12*IN_MILLISECONDS,20*IN_MILLISECONDS);
             m_uiSoulCunsumTimer = urand(30*IN_MILLISECONDS,40*IN_MILLISECONDS);
             m_uiTailLashTimer = urand(10*IN_MILLISECONDS,20*IN_MILLISECONDS);
+			m_uiCheckTimer = 700;
 
             me->SetInCombatWithZone();
             if (Creature* pControl = me->GetMap()->GetCreature(pInstance->GetData64(NPC_HALION_CONTROL)))
@@ -722,22 +732,28 @@ public:
 
         void UpdateAI(const uint32 uiDiff)
         {
-			// MARK_OF_COMBUSTION should not be on the players they did not have SPELL_FIERY_COMBUSTION active so remove the buff
-			Map::PlayerList const &PlayerList = me->GetMap()->GetPlayers();
-            if( !PlayerList.isEmpty()) 
+			// Make SPELL_FIERY_COMBUSTION and SPELL_SOUL_CONSUMPTION works
+			if (m_uiCheckTimer < uiDiff)
 			{
-				for(Map::PlayerList::const_iterator i = PlayerList.begin(); i != PlayerList.end(); ++i) 
+				Map::PlayerList const &PlayerList = me->GetMap()->GetPlayers();
+				if( !PlayerList.isEmpty()) 
 				{
-					if( Player *pCurrent = i->getSource()) 
+					for(Map::PlayerList::const_iterator i = PlayerList.begin(); i != PlayerList.end(); ++i) 
 					{
-						if (!pCurrent->HasAura(SPELL_FIERY_COMBUSTION))
-							pCurrent->RemoveAura(SPELL_MARK_OF_COMBUSTION);
+						if( Player *pCurrent = i->getSource()) 
+						{
+							if (!pCurrent->HasAura(SPELL_FIERY_COMBUSTION))
+								if (pCurrent->HasAura(SPELL_MARK_OF_COMBUSTION))
+									me->SummonCreature(NPC_COMBUSTION, pCurrent->GetPositionX(), pCurrent->GetPositionY(), pCurrent->GetPositionZ());
 
-						if (!pCurrent->HasAura(SPELL_SOUL_CONSUMPTION))
-							pCurrent->RemoveAura(SPELL_MARK_OF_CONSUMPTION);
+							if (!pCurrent->HasAura(SPELL_SOUL_CONSUMPTION))
+								if (pCurrent->HasAura(SPELL_MARK_OF_CONSUMPTION))
+									me->SummonCreature(NPC_CONSUMPTION, pCurrent->GetPositionX(), pCurrent->GetPositionY(), pCurrent->GetPositionZ());
+						}
 					}
+					m_uiCheckTimer = 700;
 				}
-			}
+			}else m_uiCheckTimer -= uiDiff;
 
             if (!me->HasAura(SPELL_TWILIGHT_ENTER))
                  DoCast(me, SPELL_TWILIGHT_ENTER);
@@ -1437,7 +1453,7 @@ public:
         {
             me->SetPhaseMask(32,true);
             SetCombatMovement(false);
-            m_uiConsumptTimer = 60*IN_MILLISECONDS;
+            m_uiConsumptTimer = 40*IN_MILLISECONDS;
             me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
             me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
             DoCast(SPELL_CONSUMPTION_AURA);
@@ -1459,10 +1475,7 @@ public:
             } 
 			else m_uiConsumptTimer -= diff;
 
-			Map::PlayerList const &players = m_pInstance->instance->GetPlayers();
-			for(Map::PlayerList::const_iterator i = players.begin(); i != players.end(); ++i)
-			{
-				if(Player* pPlayer = i->getSource())
+				if(Player* pPlayer = me->FindNearestPlayer(4,true))
 				{
 					if(pPlayer->isAlive() && pPlayer->HasAura(SPELL_MARK_OF_CONSUMPTION))
 					{
@@ -1474,11 +1487,11 @@ public:
 							m_Size = (m_Size + (stacs*0.1));
 							me->SetFloatValue(OBJECT_FIELD_SCALE_X, m_Size);
 							m_pInstance->DoRemoveAurasDueToSpellOnPlayers(SPELL_MARK_OF_CONSUMPTION);
+							me->AddAura(SPELL_CONSUMPTION_AURA,me);
 							grow = true;
 						}
 					}
 				}
-			}
         }
     };
 };
@@ -1537,10 +1550,7 @@ public:
                 me->ForcedDespawn();
             } else m_uiConbustTimer -= diff;
 
-			Map::PlayerList const &players = m_pInstance->instance->GetPlayers();
-			for(Map::PlayerList::const_iterator i = players.begin(); i != players.end(); ++i)
-			{
-				if(Player* pPlayer = i->getSource())
+				if(Player* pPlayer = me->FindNearestPlayer(4,true))
 				{
 					if(pPlayer->isAlive() && pPlayer->HasAura(SPELL_MARK_OF_COMBUSTION))
 					{
@@ -1553,11 +1563,11 @@ public:
 							me->SetFloatValue(OBJECT_FIELD_SCALE_X, m_Size);
 							me->RemoveAura(SPELL_MARK_OF_COMBUSTION, pPlayer->GetGUID());
 							m_pInstance->DoRemoveAurasDueToSpellOnPlayers(SPELL_MARK_OF_COMBUSTION);
+							me->AddAura(SPELL_COMBUSTION_AURA,me);
 							grow = true;
 						}
 					}
 				}
-			}
         }
 
     };
