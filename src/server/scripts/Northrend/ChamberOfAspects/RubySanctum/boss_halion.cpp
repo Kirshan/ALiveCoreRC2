@@ -1,6 +1,8 @@
 /*
 * Copyright (C) 2008-2010 TrinityCore <http://www.trinitycore.org/>
 *
+* Copyright (C) ALiveCore 2011-2012 <http://www.wow-alive.de/>
+*
 * This program is free software; you can redistribute it and/or modify it
 * under the terms of the GNU General Public License as published by the
 * Free Software Foundation; either version 2 of the License, or (at your
@@ -336,6 +338,23 @@ public:
 
         void UpdateAI(const uint32 uiDiff)
         {
+			// MARK_OF_COMBUSTION should not be on the players they did not have SPELL_FIERY_COMBUSTION active so remove the buff
+			Map::PlayerList const &PlayerList = me->GetMap()->GetPlayers();
+            if( !PlayerList.isEmpty()) 
+			{
+				for(Map::PlayerList::const_iterator i = PlayerList.begin(); i != PlayerList.end(); ++i) 
+				{
+					if( Player *pCurrent = i->getSource()) 
+					{
+						if (!pCurrent->HasAura(SPELL_FIERY_COMBUSTION))
+							pCurrent->RemoveAura(SPELL_MARK_OF_COMBUSTION);
+
+						if (!pCurrent->HasAura(SPELL_SOUL_CONSUMPTION))
+							pCurrent->RemoveAura(SPELL_MARK_OF_CONSUMPTION);
+					}
+				}
+			}
+
             if (!pInstance)
                 return;
 
@@ -703,6 +722,22 @@ public:
 
         void UpdateAI(const uint32 uiDiff)
         {
+			// MARK_OF_COMBUSTION should not be on the players they did not have SPELL_FIERY_COMBUSTION active so remove the buff
+			Map::PlayerList const &PlayerList = me->GetMap()->GetPlayers();
+            if( !PlayerList.isEmpty()) 
+			{
+				for(Map::PlayerList::const_iterator i = PlayerList.begin(); i != PlayerList.end(); ++i) 
+				{
+					if( Player *pCurrent = i->getSource()) 
+					{
+						if (!pCurrent->HasAura(SPELL_FIERY_COMBUSTION))
+							pCurrent->RemoveAura(SPELL_MARK_OF_COMBUSTION);
+
+						if (!pCurrent->HasAura(SPELL_SOUL_CONSUMPTION))
+							pCurrent->RemoveAura(SPELL_MARK_OF_CONSUMPTION);
+					}
+				}
+			}
 
             if (!me->HasAura(SPELL_TWILIGHT_ENTER))
                  DoCast(me, SPELL_TWILIGHT_ENTER);
@@ -1482,7 +1517,7 @@ public:
         void Reset()
         {
 			me->SetPhaseMask(1,true);
-            m_uiConbustTimer = 60*IN_MILLISECONDS;
+            m_uiConbustTimer = 40*IN_MILLISECONDS;
             SetCombatMovement(false);
             me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
             me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
@@ -1499,8 +1534,6 @@ public:
 
         void UpdateAI(const uint32 diff)
         {
-            if(m_pInstance && m_pInstance->GetData(TYPE_HALION) != IN_PROGRESS)
-                me->ForcedDespawn();
 
             if (m_uiConbustTimer <= diff)
             {
