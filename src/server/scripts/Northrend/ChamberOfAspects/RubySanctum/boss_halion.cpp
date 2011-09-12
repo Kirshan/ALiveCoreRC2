@@ -1625,65 +1625,33 @@ public:
 
         void UpdateAI(const uint32 uiDiff)
         {
-            switch (getStage())
-            {
-                case 0:
-                    if (m_uiMeteorImpactTimer <= uiDiff)
-                    {
-                        DoCast(SPELL_METEOR_IMPACT);
-                        m_uiMeteorImpactTimer = 0.5*IN_MILLISECONDS;
-                        setStage(1);
-                    } else m_uiMeteorImpactTimer -= uiDiff;
-                    break;
-                case 1:
-                    if (m_uiMeteorStrikeTimer <= uiDiff)
-                    {
-                        DoCast(SPELL_METEOR_STRIKE);
-                        m_uiMeteorStrikeTimer = 4.5*IN_MILLISECONDS;
-                        setStage(2);
-                    } else m_uiMeteorStrikeTimer -= uiDiff;
-                    break;
-                case 2:
-                    // Place summon flames there
-                    {
-                        direction = 2.0f*M_PI*((float)urand(0,15)/16.0f);
-                        float x, y, radius;
-                        radius = 0.0f;
-                        for(uint8 i = 0; i < RAID_MODE(TARGETS_10,TARGETS_25,TARGETS_10,TARGETS_25); ++i)
-                        {
-                            radius = radius + 5.0f;
-                            me->GetNearPoint2D(x, y, radius, direction);
-                            me->SummonCreature(NPC_METEOR_STRIKE_1, x, y, me->GetPositionZ(), 0.0f, TEMPSUMMON_TIMED_DESPAWN, 20000);
-                            me->GetNearPoint2D(x, y, radius, direction+M_PI);
-                            me->SummonCreature(NPC_METEOR_STRIKE_1, x, y, me->GetPositionZ(), 0.0f, TEMPSUMMON_TIMED_DESPAWN, 20000);
-                        }
-                    };
-                    {
-                        direction = direction + M_PI/4;
-                        float x, y, radius;
-                        radius = 0.0f;
-                        for(uint8 i = 0; i < RAID_MODE(TARGETS_10,TARGETS_25,TARGETS_10,TARGETS_25); ++i)
-                        {
-                            radius = radius + 5.0f;
-                            me->GetNearPoint2D(x, y, radius, direction);
-                            me->SummonCreature(NPC_METEOR_STRIKE_1, x, y, me->GetPositionZ(), 0.0f, TEMPSUMMON_TIMED_DESPAWN, 20000);
-                            me->GetNearPoint2D(x, y, radius, direction+M_PI);
-                            me->SummonCreature(NPC_METEOR_STRIKE_1, x, y, me->GetPositionZ(), 0.0f, TEMPSUMMON_TIMED_DESPAWN, 20000);
-                        }
-                    };
-                    setStage(3);
-                    break;
-                case 3:
-                    if (m_uiMeteorImpactTimer <= uiDiff)
-                    {
-                        DoCast(SPELL_METEOR_IMPACT);
-                        me->ForcedDespawn();
-                        m_uiMeteorImpactTimer = 0.5*IN_MILLISECONDS;
-                    } else m_uiMeteorImpactTimer -= uiDiff;
-                    break;
-                default:
-                     break;
-            }
+			if (m_uiMeteorImpactTimer <= uiDiff)
+			{
+				DoCast(SPELL_METEOR_IMPACT);
+				m_uiMeteorImpactTimer = 0.5*IN_MILLISECONDS;
+			} else m_uiMeteorImpactTimer -= uiDiff;
+
+			if (Creature *mCreature = me->FindNearestCreature(NPC_METEOR_STRIKE_2, 200, true)
+			{
+				if (mCreature && mCreature->IsAlive())
+				{
+					if (me->IsWithinDistInMap(mCreature, 3))
+					{
+						direction = 2.0f*M_PI*((float)urand(0,15)/16.0f);
+						float x, y, radius;
+						radius = 0.0f;
+						for(uint8 i = 0; i < RAID_MODE(TARGETS_10,TARGETS_25,TARGETS_10,TARGETS_25); ++i)
+						{
+							radius = radius + 5.0f;
+							me->GetNearPoint2D(x, y, radius, direction);
+							me->SummonCreature(NPC_METEOR_STRIKE_1, x, y, me->GetPositionZ(), 0.0f, TEMPSUMMON_TIMED_DESPAWN, 20000);
+							me->GetNearPoint2D(x, y, radius, direction+M_PI);
+							me->SummonCreature(NPC_METEOR_STRIKE_1, x, y, me->GetPositionZ(), 0.0f, TEMPSUMMON_TIMED_DESPAWN, 20000);
+						}
+						me->Kill(mCreature);
+					}
+				}
+			}
         }
     };
 };
