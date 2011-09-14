@@ -1125,7 +1125,7 @@ public:
 			if(uiCheckTimer <= uiDiff)
 			{
 				if(!me->FindNearestCreature(NPC_PROTOTYP, 300.0f, true))
-					me->Kill(me);
+					me->UnitKill(me);
 			}else{
 				uiCheckTimer -= uiDiff;
 			}
@@ -1298,7 +1298,7 @@ public:
 			if (data == 1)
 			{
 				me->SummonCreature(NPC_KRIEGER, me->GetPositionX(), me->GetPositionY(), me->GetPositionZ());
-				me->Kill(me);
+				me->UnitKill(me);
 			}
 		}
 
@@ -1309,8 +1309,8 @@ public:
 				if(Creature* npc_trigger = me->FindNearestCreature(NPC_NEF_METEOR_RES, 3.0f, true))
 				{
 					me->SummonCreature(NPC_KRIEGER, me->GetPositionX(), me->GetPositionY(), me->GetPositionZ());
-					npc_trigger->Kill(npc_trigger);
-					me->Kill(me);
+					npc_trigger->UnitKill(npc_trigger);
+					me->UnitKill(me);
 				}
 				timer = 1000;
 			}else{
@@ -1387,7 +1387,7 @@ public:
         {
 			if(timer <= diff)
 			{
-				me->Kill(me);
+				me->UnitKill(me);
 				timer = 1000;
 			}else{
 				timer -= diff;

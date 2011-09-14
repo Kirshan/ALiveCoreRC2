@@ -242,7 +242,7 @@ class ValithriaDespawner : public BasicEvent
             switch (creature->GetEntry())
             {
                 case NPC_VALITHRIA_DREAMWALKER:
-                    if (InstanceScript* instance = creature->GetInstanceScript())
+                    if (InstanceScript* instance = creature->LoadInstanceScript())
                         instance->SendEncounterUnit(ENCOUNTER_FRAME_REMOVE, creature);
                     break;
                 case NPC_BLAZING_SKELETON:
@@ -290,7 +290,7 @@ class boss_valithria_dreamwalker : public CreatureScript
         struct boss_valithria_dreamwalkerAI : public ScriptedAI
         {
             boss_valithria_dreamwalkerAI(Creature* creature) : ScriptedAI(creature),
-                _instance(creature->GetInstanceScript()), _portalCount(DIFFICULTY<uint32>(3, 8, 3, 8))
+                _instance(creature->LoadInstanceScript()), _portalCount(DIFFICULTY<uint32>(3, 8, 3, 8))
             {
             }
 
@@ -403,7 +403,7 @@ class boss_valithria_dreamwalker : public CreatureScript
                         lichKing->CastSpell(lichKing, SPELL_SPAWN_CHEST, false);
 
                     if (Creature* trigger = ObjectAccessor::GetCreature(*me, _instance->GetData64(DATA_VALITHRIA_TRIGGER)))
-                        me->Kill(trigger);
+                        me->UnitKill(trigger);
                 }
             }
 
@@ -587,7 +587,7 @@ class npc_the_lich_king_controller : public CreatureScript
         struct npc_the_lich_king_controllerAI : public ScriptedAI
         {
             npc_the_lich_king_controllerAI(Creature* creature) : ScriptedAI(creature),
-                _instance(creature->GetInstanceScript())
+                _instance(creature->LoadInstanceScript())
             {
             }
 
@@ -762,7 +762,7 @@ class npc_risen_archmage : public CreatureScript
         struct npc_risen_archmageAI : public ScriptedAI
         {
             npc_risen_archmageAI(Creature* creature) : ScriptedAI(creature),
-                _instance(creature->GetInstanceScript())
+                _instance(creature->LoadInstanceScript())
             {
             }
 
@@ -938,7 +938,7 @@ class npc_suppresser : public CreatureScript
         struct npc_suppresserAI : public ScriptedAI
         {
             npc_suppresserAI(Creature* creature) : ScriptedAI(creature),
-                _instance(creature->GetInstanceScript())
+                _instance(creature->LoadInstanceScript())
             {
             }
 
@@ -1131,7 +1131,7 @@ class npc_dream_cloud : public CreatureScript
         struct npc_dream_cloudAI : public ScriptedAI
         {
             npc_dream_cloudAI(Creature* creature) : ScriptedAI(creature),
-                _instance(creature->GetInstanceScript())
+                _instance(creature->LoadInstanceScript())
             {
             }
 
@@ -1405,7 +1405,7 @@ class spell_dreamwalker_nightmare_cloud : public SpellScriptLoader
 
             bool Load()
             {
-                _instance = GetOwner()->GetInstanceScript();
+                _instance = GetOwner()->LoadInstanceScript();
                 return _instance != NULL;
             }
 

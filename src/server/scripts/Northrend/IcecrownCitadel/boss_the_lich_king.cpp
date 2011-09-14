@@ -362,7 +362,7 @@ void RemoveAllPassengers(Unit* me)
 {
 	// Fix Passenger Drop
 	me->SetVisible(false);
-	me->Kill(me);
+	me->UnitKill(me);
 }
 
 class boss_the_lich_king : public CreatureScript
@@ -374,7 +374,7 @@ class boss_the_lich_king : public CreatureScript
         {
             boss_the_lich_kingAI(Creature* creature) : BossAI(creature, DATA_THE_LICH_KING), summons(me)
             {
-                instance = me->GetInstanceScript();
+                instance = me->LoadInstanceScript();
             }
 
             uint32 GetData(uint32 dataId)
@@ -651,7 +651,7 @@ class boss_the_lich_king : public CreatureScript
                         else
                         {
                             //There is no target - unsummon valkyr
-                            summoned->Kill(summoned);
+                            summoned->UnitKill(summoned);
                             summoned->DespawnOrUnsummon();
                         }
                         break;*/
@@ -750,7 +750,7 @@ class boss_the_lich_king : public CreatureScript
                 if (!caster || !caster->isAlive())
                     return;
 
-                InstanceScript* instance = caster->GetInstanceScript();
+                InstanceScript* instance = caster->LoadInstanceScript();
 				uint32 currentSummoned;
 				currentSummoned = 0;
 
@@ -1128,7 +1128,7 @@ class boss_the_lich_king : public CreatureScript
 							    for (Map::PlayerList::const_iterator itr = players.begin(); itr != players.end(); ++itr)
 								{
 								    Player* dietarget = itr->getSource();
-									dietarget->Kill(dietarget);
+									dietarget->UnitKill(dietarget);
 								}
                                 uiEndingTimer = 11000;
                                 break;
@@ -1355,7 +1355,7 @@ class npc_tirion_icc : public CreatureScript
         {
             npc_tirion_iccAI(Creature* creature) : ScriptedAI(creature)
             {
-                instance = creature->GetInstanceScript();
+                instance = creature->LoadInstanceScript();
             }
 
             void Reset()
@@ -1566,7 +1566,7 @@ class npc_tirion_icc : public CreatureScript
 
         bool OnGossipHello(Player* player, Creature* creature)
         {
-            InstanceScript* instance = creature->GetInstanceScript();
+            InstanceScript* instance = creature->LoadInstanceScript();
 
             if (!instance)
                 return false;
@@ -1650,7 +1650,7 @@ class npc_valkyr_shadowguard : public CreatureScript
             npc_valkyr_shadowguardAI(Creature* creature) : BossAI(creature,DATA_VALKYR), vehicle(creature->GetVehicleKit()), m_victimGuid(0)
             {
                 ASSERT(vehicle);
-				instance = creature->GetInstanceScript();
+				instance = creature->LoadInstanceScript();
             }
 
             void Reset()
@@ -1903,7 +1903,7 @@ class npc_shambling_horror: public CreatureScript
         {
             npc_shambling_horrorAI(Creature* creature): ScriptedAI(creature)
             {
-                instance = creature->GetInstanceScript();
+                instance = creature->LoadInstanceScript();
             }
         
             void EnterCombat(Unit* /*who*/)
@@ -2186,7 +2186,7 @@ class npc_defile : public CreatureScript
 			{
 				if(dietimer <= diff)
 				{
-					me->Kill(me);
+					me->UnitKill(me);
 				}else{
 					dietimer -= diff;
 				}
@@ -2234,7 +2234,7 @@ class npc_spirit_warden : public CreatureScript
             {
                 if (Player* player = me->FindNearestPlayer(80.0f, true))
                 {
-                    if (Creature* terenasFighter = ObjectAccessor::GetCreature(*me, me->GetInstanceScript()->GetData64(DATA_TERENAS_FIGHTER)))
+                    if (Creature* terenasFighter = ObjectAccessor::GetCreature(*me, me->LoadInstanceScript()->GetData64(DATA_TERENAS_FIGHTER)))
                         terenasFighter->CastSpell(player, SPELL_RESTORE_SOUL, true);
 
                     TeleportPlayerToFrozenThrone(player);
@@ -2257,7 +2257,7 @@ class npc_spirit_warden : public CreatureScript
                         events.Reset();
                         me->NearTeleportTo(FrostmourneRoom[1].m_positionX, FrostmourneRoom[1].m_positionY, FrostmourneRoom[1].m_positionZ, FrostmourneRoom[1].m_orientation); 
 
-                        if (Creature* terenasFighter = ObjectAccessor::GetCreature(*me, me->GetInstanceScript()->GetData64(DATA_TERENAS_FIGHTER)))
+                        if (Creature* terenasFighter = ObjectAccessor::GetCreature(*me, me->LoadInstanceScript()->GetData64(DATA_TERENAS_FIGHTER)))
                             AttackStart(terenasFighter);
 
                         me->SetHealth(me->GetMaxHealth());
@@ -2282,7 +2282,7 @@ class npc_spirit_warden : public CreatureScript
                     {
                         case EVENT_CHECK_SOUL_RIP_DISPELLED:
                         {
-                            if (Creature* terenasFighter = ObjectAccessor::GetCreature(*me, me->GetInstanceScript()->GetData64(DATA_TERENAS_FIGHTER)))
+                            if (Creature* terenasFighter = ObjectAccessor::GetCreature(*me, me->LoadInstanceScript()->GetData64(DATA_TERENAS_FIGHTER)))
                                 if (!terenasFighter->HasAura(SPELL_SOUL_RIP, me->GetGUID()))
                                 {
                                     me->InterruptNonMeleeSpells(false);
@@ -2294,7 +2294,7 @@ class npc_spirit_warden : public CreatureScript
                         }
                         case EVENT_SOUL_RIP:
                         {
-                            if (Creature* terenasFighter = ObjectAccessor::GetCreature(*me, me->GetInstanceScript()->GetData64(DATA_TERENAS_FIGHTER)))
+                            if (Creature* terenasFighter = ObjectAccessor::GetCreature(*me, me->LoadInstanceScript()->GetData64(DATA_TERENAS_FIGHTER)))
                                 DoCast(terenasFighter, SPELL_SOUL_RIP, true);
 
                             events.ScheduleEvent(EVENT_SOUL_RIP, 20000);
@@ -2307,7 +2307,7 @@ class npc_spirit_warden : public CreatureScript
                             Player* player = me->FindNearestPlayer(80.0f, true);
                             player->CastSpell(player, SPELL_DESTROY_SOUL, true);
 
-                            if (Creature* lichKing = ObjectAccessor::GetCreature(*me, me->GetInstanceScript()->GetData64(DATA_THE_LICH_KING)))
+                            if (Creature* lichKing = ObjectAccessor::GetCreature(*me, me->LoadInstanceScript()->GetData64(DATA_THE_LICH_KING)))
                                 DoCast(lichKing, IsHeroic() ? SPELL_HARVESTED_SOUL_HEROIC : SPELL_HARVESTED_SOUL_NORMAL, true);
 
                             TeleportPlayerToFrozenThrone(player);
@@ -2358,7 +2358,7 @@ class npc_terenas_menethil : public CreatureScript
                     {
                         me->NearTeleportTo(FrostmourneRoom[2].m_positionX, FrostmourneRoom[2].m_positionY, FrostmourneRoom[2].m_positionZ, FrostmourneRoom[2].m_orientation); 
 
-                        if (Creature* spiritWarden = ObjectAccessor::GetCreature(*me, me->GetInstanceScript()->GetData64(DATA_SPIRIT_WARDEN)))
+                        if (Creature* spiritWarden = ObjectAccessor::GetCreature(*me, me->LoadInstanceScript()->GetData64(DATA_SPIRIT_WARDEN)))
                             AttackStart(spiritWarden);
 
                         me->SetHealth(me->GetMaxHealth() / 2);
@@ -2379,7 +2379,7 @@ class npc_terenas_menethil : public CreatureScript
                 Player* player = me->FindNearestPlayer(80.0f, true);
                 player->CastSpell(player, SPELL_DESTROY_SOUL, true);
 
-                if (Creature* lichKing = ObjectAccessor::GetCreature(*me, me->GetInstanceScript()->GetData64(DATA_THE_LICH_KING)))
+                if (Creature* lichKing = ObjectAccessor::GetCreature(*me, me->LoadInstanceScript()->GetData64(DATA_THE_LICH_KING)))
                     DoCast(lichKing, IsHeroic() ? SPELL_HARVESTED_SOUL_HEROIC : SPELL_HARVESTED_SOUL_NORMAL, true);
 
                 TeleportPlayerToFrozenThrone(player);
@@ -2416,7 +2416,7 @@ class npc_terenas_menethil : public CreatureScript
                         }
                         case EVENT_CHECK_SPIRIT_WARDEN_HEALTH:
                         {
-                            if (Creature* spiritWarden = ObjectAccessor::GetCreature(*me, me->GetInstanceScript()->GetData64(DATA_SPIRIT_WARDEN)))
+                            if (Creature* spiritWarden = ObjectAccessor::GetCreature(*me, me->LoadInstanceScript()->GetData64(DATA_SPIRIT_WARDEN)))
                             {
                                 if (!spiritWarden->isAlive())
                                     KilledUnit(spiritWarden);
@@ -2704,7 +2704,7 @@ class spell_lich_king_necrotic_plague : public SpellScriptLoader
                     return;
 
                 if (GetStackAmount() >= 30)
-                    if (InstanceScript *instance = target->GetInstanceScript())
+                    if (InstanceScript *instance = target->LoadInstanceScript())
                         instance->SetData(DATA_BEEN_WAITING_ACHIEVEMENT, DONE);
 
                 CellPair p(Trinity::ComputeCellPair(target->GetPositionX(), target->GetPositionY()));
@@ -2741,7 +2741,7 @@ class spell_lich_king_necrotic_plague : public SpellScriptLoader
                     stacksTransferred = 1;
 
                 uint32 spellId = aurEff->GetSpellProto()->Id;
-                InstanceScript* instance = target->GetInstanceScript();
+                InstanceScript* instance = target->LoadInstanceScript();
 
                 if (instance)
                 {
@@ -3102,7 +3102,7 @@ class spell_lich_king_vile_spirit_summon : public SpellScriptLoader
                 if (!caster || !caster->isAlive())
                     return;
 
-                InstanceScript* instance = caster->GetInstanceScript();
+                InstanceScript* instance = caster->LoadInstanceScript();
 
                 if (instance)
                 {
@@ -3191,7 +3191,7 @@ class spell_lich_king_winter : public SpellScriptLoader
 
                     caster->CastSpell(caster, SPELL_QUAKE, true);
                     DoScriptText(SAY_BROKEN_ARENA, caster);
-                    InstanceScript* instance = caster->GetInstanceScript();
+                    InstanceScript* instance = caster->LoadInstanceScript();
 
                     if (!instance)
                         return;
@@ -3205,7 +3205,7 @@ class spell_lich_king_winter : public SpellScriptLoader
                 if (!caster || !caster->isAlive())
                     return;
 
-                InstanceScript* instance = caster->GetInstanceScript();
+                InstanceScript* instance = caster->LoadInstanceScript();
 
                 if (!instance)
                     return;
@@ -3273,7 +3273,7 @@ class spell_lich_king_quake : public SpellScriptLoader
                 caster->CastSpell(caster, SPELL_WMO_INTACT, true);
                 caster->CastSpell(caster, SPELL_WMO_DESTROY, true);
 
-                if (InstanceScript* instance = GetTarget()->GetInstanceScript())
+                if (InstanceScript* instance = GetTarget()->LoadInstanceScript())
                 {
                     if (Creature* lichKing = Unit::GetCreature(*GetTarget(), instance->GetData64(DATA_THE_LICH_KING)))
                         lichKing->AI()->DoAction(ACTION_PHASE_SWITCH_2);
@@ -3296,7 +3296,7 @@ class spell_lich_king_quake : public SpellScriptLoader
                 if (!caster || !caster->isAlive())
                     return;
 
-                InstanceScript* instance = caster->GetInstanceScript();
+                InstanceScript* instance = caster->LoadInstanceScript();
 
                 if (!instance)
                     return;
@@ -3336,7 +3336,7 @@ class spell_vile_spirit_distance_check : public SpellScriptLoader
                 {
                     caster->CastSpell(caster, SPELL_SPIRIT_BURST, true);
 
-                    if (InstanceScript* instance = caster->GetInstanceScript())
+                    if (InstanceScript* instance = caster->LoadInstanceScript())
                         instance->SetData(DATA_NECK_DEEP_ACHIEVEMENT, FAIL);
 
                     caster->GetAI()->DoAction(ACTION_DESPAWN);
@@ -3542,7 +3542,7 @@ class spell_lich_king_tirion_mass_resurrection : public SpellScriptLoader
             /*void MassResurrect(SpellEffIndex effIndex)
             {
                 PreventHitDefaultEffect(effIndex);
-                InstanceScript *instance = GetCaster()->GetInstanceScript();
+                InstanceScript *instance = GetCaster()->LoadInstanceScript();
 
                 if (!instance)
                     return;
@@ -3631,7 +3631,7 @@ class spell_lich_king_harvest_soul : public SpellScriptLoader
                 player->getThreatManager().clearReferences();
                 player->GetMap()->LoadGrid(FrostmourneRoom[0].m_positionX, FrostmourneRoom[0].m_positionY);
                 player->m_Events.AddEvent(new TeleportToFrostmourneRoom(player, 2), player->m_Events.CalculateTime(uint64(2000)));
-                InstanceScript* instance = player->GetInstanceScript();
+                InstanceScript* instance = player->LoadInstanceScript();
 
                 if (instance)
                     if (Creature* lichKing = ObjectAccessor::GetCreature(*caster, instance->GetData64(DATA_THE_LICH_KING)))

@@ -574,7 +574,7 @@ class boss_high_overlord_varok_saurfang : public CreatureScript
 
 				bool OnGossipHello(Player* pPlayer, Creature* pCreature)
 				{
-		            InstanceScript* pInstance = pCreature->GetInstanceScript();
+		            InstanceScript* pInstance = pCreature->LoadInstanceScript();
 						if (pInstance->GetBossState( DATA_GUNSHIP_BATTLE_EVENT) == IN_PROGRESS)
 						{
 							pPlayer->ADD_GOSSIP_ITEM(0, "Battle in Progress", 631, HORDE_GOSSIP_ACTION_CANCEL);
@@ -637,7 +637,7 @@ class npc_zafod_boombox : public CreatureScript
                 {
                         npc_zafod_boomboxAI(Creature* pCreature) : ScriptedAI(pCreature)
 						{
-							pInstance = me->GetInstanceScript(); 
+							pInstance = me->LoadInstanceScript(); 
 						}
 	
                         void UpdateAI( const uint32 diff) { }
@@ -814,7 +814,7 @@ class npc_sergeant : public CreatureScript
                 struct npc_sergeantAI : public ScriptedAI
                 {
                         npc_sergeantAI(Creature* pCreature) : ScriptedAI(pCreature)
-            { pInstance = me->GetInstanceScript(); }
+            { pInstance = me->LoadInstanceScript(); }
 
                         void Reset()
                         {
@@ -830,7 +830,7 @@ class npc_sergeant : public CreatureScript
                         void UpdateAI( const uint32 diff) 
                         {
 								if(pInstance->GetData(DATA_GUNSHIP_EVENT) == true)
-									me->Kill(me);
+									me->UnitKill(me);
 
 								// Need a Check , creature should not leaf the Bout.
 
@@ -887,7 +887,7 @@ class npc_skybreaker_rifleman : public CreatureScript
                 struct npc_skybreaker_riflemanAI : public ScriptedAI
                 {
                         npc_skybreaker_riflemanAI(Creature* pCreature) : ScriptedAI(pCreature)
-            { pInstance = me->GetInstanceScript(); }
+            { pInstance = me->LoadInstanceScript(); }
 
                         void Reset()
                         {
@@ -909,7 +909,7 @@ class npc_skybreaker_rifleman : public CreatureScript
                         void UpdateAI( const uint32 diff)
                         {
 								if(pInstance->GetData(DATA_GUNSHIP_EVENT) == true)
-									me->Kill(me);
+									me->UnitKill(me);
 
 								 if (!UpdateVictim())
 									return;
@@ -948,7 +948,7 @@ class npc_korkron_axethrower : public CreatureScript
                 struct npc_korkron_axethrowerAI : public ScriptedAI
                 {
                         npc_korkron_axethrowerAI(Creature* pCreature) : ScriptedAI(pCreature)
-            { pInstance = me->GetInstanceScript(); }
+            { pInstance = me->LoadInstanceScript(); }
 
                         void Reset()
                         {
@@ -970,7 +970,7 @@ class npc_korkron_axethrower : public CreatureScript
                         void UpdateAI( const uint32 diff)
                         {
 								if(pInstance->GetData(DATA_GUNSHIP_EVENT) == true)
-									me->Kill(me);
+									me->UnitKill(me);
 
 								if (!UpdateVictim())
 									return;
@@ -1009,7 +1009,7 @@ class npc_marine_or_reaver : public CreatureScript
                 struct npc_marine_or_reaverAI : public ScriptedAI
                 {
                         npc_marine_or_reaverAI(Creature* pCreature) : ScriptedAI(pCreature)
-            { pInstance = me->GetInstanceScript(); }
+            { pInstance = me->LoadInstanceScript(); }
 
                         void Reset()
                         {
@@ -1023,7 +1023,7 @@ class npc_marine_or_reaver : public CreatureScript
                         void UpdateAI( const uint32 diff)
                         {
 								if(pInstance->GetData(DATA_GUNSHIP_EVENT) == true)
-									me->Kill(me);
+									me->UnitKill(me);
 
 								// Need a Check , creature should not leaf the Bout.
                            
@@ -1068,7 +1068,7 @@ class npc_mortar_soldier_or_rocketeer : public CreatureScript
                 struct npc_mortar_soldier_or_rocketeerAI : public ScriptedAI
                 {
                         npc_mortar_soldier_or_rocketeerAI(Creature* pCreature) : ScriptedAI(pCreature)
-            { pInstance = me->GetInstanceScript(); }
+            { pInstance = me->LoadInstanceScript(); }
 
                         void Reset()
                         {
@@ -1090,7 +1090,7 @@ class npc_mortar_soldier_or_rocketeer : public CreatureScript
                         void UpdateAI( const uint32 diff)
                         {
 								if(pInstance->GetData(DATA_GUNSHIP_EVENT) == true)
-									me->Kill(me);
+									me->UnitKill(me);
 
 							if (!UpdateVictim())
 								return;
@@ -1131,7 +1131,7 @@ class npc_sorcerer_or_battle_mage : public CreatureScript
                 struct npc_sorcerer_or_battle_mageAI : public ScriptedAI
                 {
                         npc_sorcerer_or_battle_mageAI(Creature* pCreature) : ScriptedAI(pCreature)
-            { pInstance = me->GetInstanceScript(); }
+            { pInstance = me->LoadInstanceScript(); }
 
                         void Reset()
                         {
@@ -1150,7 +1150,7 @@ class npc_sorcerer_or_battle_mage : public CreatureScript
                         void UpdateAI( const uint32 diff)
                         {
 								if(pInstance->GetData(DATA_GUNSHIP_EVENT) == true)
-									me->Kill(me);
+									me->UnitKill(me);
 
 								if (!UpdateVictim())
 									return;
@@ -1192,7 +1192,7 @@ class npc_combattrigger : public CreatureScript
                 {
                         npc_combattriggerAI(Creature* pCreature) : ScriptedAI(pCreature)
 						{ 
-							pInstance = me->GetInstanceScript(); 
+							pInstance = me->LoadInstanceScript(); 
 						}
 
                         void Reset()
@@ -1224,7 +1224,7 @@ class npc_combattrigger : public CreatureScript
                         void UpdateAI( const uint32 diff)
                         {
 							if(pInstance->GetData(DATA_GUNSHIP_EVENT) == true)
-								me->Kill(me);
+								me->UnitKill(me);
 
 							if (CaseTimer <= diff)
 							{
@@ -1291,7 +1291,7 @@ class npc_GunShip_healthtrigger : public CreatureScript
                 {
                         npc_GunShip_healthtriggerAI(Creature* pCreature) : ScriptedAI(pCreature)
 						{ 
-							pInstance = me->GetInstanceScript(); 
+							pInstance = me->LoadInstanceScript(); 
 						}
 
                         void Reset()
@@ -1342,7 +1342,7 @@ class npc_GunShip_healthtrigger : public CreatureScript
                         void UpdateAI( const uint32 diff)
                         {
 							if(pInstance->GetData(DATA_GUNSHIP_EVENT) == true)
-								me->Kill(me);
+								me->UnitKill(me);
 						}
 
 						uint32 m_me;
@@ -1365,7 +1365,7 @@ class npc_portal_icc : public CreatureScript
                 {
                         npc_portal_iccAI(Creature* pCreature) : ScriptedAI(pCreature)
 						{ 
-							instance = me->GetInstanceScript(); 
+							instance = me->LoadInstanceScript(); 
 						}
 
                         void Reset()
@@ -1405,7 +1405,7 @@ class npc_portal_icc : public CreatureScript
                         void UpdateAI( const uint32 diff)
                         {
 							if(instance->GetData(DATA_GUNSHIP_EVENT) == true)
-								me->Kill(me);
+								me->UnitKill(me);
 
 							if (SummonTimer <= diff)
 							{
@@ -1416,7 +1416,7 @@ class npc_portal_icc : public CreatureScript
 									CurrentCount++;
 								}else{
 									me->SetVisible(false);
-									me->Kill(me);
+									me->UnitKill(me);
 								}
 							}else{
 								SummonTimer -= diff;
