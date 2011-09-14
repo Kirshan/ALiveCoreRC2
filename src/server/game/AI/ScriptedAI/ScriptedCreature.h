@@ -242,6 +242,42 @@ struct ScriptedAI : public CreatureAI
         return heroic25;
     }
 
+	    template<class T> inline
+    const T& DIFFICULTY(const T& normal10, const T& normal25)
+    {
+        switch (_difficulty)
+        {
+            case RAID_DIFFICULTY_10MAN_NORMAL:
+                return normal10;
+            case RAID_DIFFICULTY_25MAN_NORMAL:
+                return normal25;
+            default:
+                break;
+        }
+
+        return normal25;
+    }
+
+    template<class T> inline
+    const T& DIFFICULTY(const T& normal10, const T& normal25, const T& heroic10, const T& heroic25)
+    {
+        switch (_difficulty)
+        {
+            case RAID_DIFFICULTY_10MAN_NORMAL:
+                return normal10;
+            case RAID_DIFFICULTY_25MAN_NORMAL:
+                return normal25;
+            case RAID_DIFFICULTY_10MAN_HEROIC:
+                return heroic10;
+            case RAID_DIFFICULTY_25MAN_HEROIC:
+                return heroic25;
+            default:
+                break;
+        }
+
+        return heroic25;
+    }
+
 	void SetImmuneToPushPullEffects(bool set)
     {
         me->ApplySpellImmune(0, IMMUNITY_EFFECT, SPELL_EFFECT_KNOCK_BACK, set);
