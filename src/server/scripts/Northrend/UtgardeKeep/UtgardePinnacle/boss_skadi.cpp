@@ -504,7 +504,7 @@ public:
         {
         	player->CastSpell(pSkadi, SPELL_RAPID_FIRE, true);
 		m_pInstance->SetData(DATA_HARPOON_EVENT,1);
-		go->RemoveFromWorld();
+		pGO->RemoveFromWorld();
         }
         return false;
     }
