@@ -1639,9 +1639,9 @@ public:
 				m_uiMeteorImpactTimer = 0.5*IN_MILLISECONDS;
 			} else m_uiMeteorImpactTimer -= uiDiff;
 
-			if (Creature *mCreature = me->FindNearestCreature(NPC_METEOR_STRIKE_2, 200, true)
+			if (Creature *mCreature = me->FindNearestCreature(NPC_METEOR_STRIKE_2, 200, true))
 			{
-				if (mCreature && mCreature->IsAlive())
+				if (mCreature && mCreature->isAlive())
 				{
 					if (me->IsWithinDistInMap(mCreature, 3))
 					{
