@@ -1,6 +1,8 @@
 /*
  * Copyright (C) 2008-2011 TrinityCore <http://www.trinitycore.org/>
  *
+ * Copyright (C) 2011-2012 ALiveCore <http://www-wow-alive.de/>
+ *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
  * Free Software Foundation; either version 2 of the License, or (at your
@@ -18,9 +20,9 @@
 /* Script Data Start
 SDName: Boss_Skadi
 SDAuthor: LordVanMartin, JohnHoliver, DarkSoe
-SD%Complete: 90%
+SD%Complete: 99%
 SDComment: <Known Bugs>
-               After Unmount() he appears to still be flying even with SetFlying(false)
+               After Unmount() he appears to still be flying even with SetFlying(false) <- fixed in last commit or is bug existing ?
            </Known Bugs>
 SDCategory: Utgarde Pinnacle
 Script Data End */
@@ -500,8 +502,9 @@ public:
 
         if (Creature* pSkadi = Unit::GetCreature((*pGO), m_pInstance->GetData64(DATA_SKADI_THE_RUTHLESS)))
         {
-            player->CastSpell(pSkadi, SPELL_RAPID_FIRE, true);
-			m_pInstance->SetData(DATA_HARPOON_EVENT,1);
+        	player->CastSpell(pSkadi, SPELL_RAPID_FIRE, true);
+		m_pInstance->SetData(DATA_HARPOON_EVENT,1);
+		go->RemoveFromWorld();
         }
         return false;
     }
