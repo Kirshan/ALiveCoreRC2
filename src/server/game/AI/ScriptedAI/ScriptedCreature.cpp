@@ -428,6 +428,19 @@ void ScriptedAI::SetCombatMovement(bool allowMovement)
     _isCombatMovementAllowed = allowMovement;
 }
 
+void ScriptedAI::AttackPlayerInMap(MapRefManager::const_iterator itr)
+{
+    if(Player *player = itr->getSource())
+		me->AI()->AttackStart(player);
+}
+
+void ScriptedAI::AttackPlayerInMapIfNoGM(MapRefManager::const_iterator itr)
+{
+	if(Player *player = itr->getSource())
+		if(!player->isGameMaster())
+			me->AI()->AttackStart(player);
+}
+
 enum eNPCs
 {
     NPC_BROODLORD   = 12017,

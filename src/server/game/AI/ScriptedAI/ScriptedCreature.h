@@ -175,6 +175,9 @@ struct ScriptedAI : public CreatureAI
     void SetCombatMovement(bool allowMovement);
     bool IsCombatMovementAllowed() { return _isCombatMovementAllowed; }
 
+	void AttackPlayerInMap(MapRefManager::const_iterator itr);
+	void AttackPlayerInMapIfNoGM(MapRefManager::const_iterator itr);
+
     bool EnterEvadeIfOutOfCombatArea(uint32 const diff);
 
     // return true for heroic mode. i.e.

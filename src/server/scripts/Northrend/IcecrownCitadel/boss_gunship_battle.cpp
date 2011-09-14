@@ -1206,12 +1206,8 @@ class npc_combattrigger : public CreatureScript
 							Map::PlayerList const &players = me->GetMap()->GetPlayers();
 							for (Map::PlayerList::const_iterator itr = players.begin(); itr != players.end(); ++itr)
 							{
-								player = itr->getSource();
-								//if (!player->isGameMaster()) // Not needet in Debug
-								//{
-									me->AI()->AttackStart(player);
-									break;
-								//}
+								AttackPlayerInMap(itr);
+								break;
 							}
                         }
 
@@ -1303,12 +1299,8 @@ class npc_GunShip_healthtrigger : public CreatureScript
 							Map::PlayerList const &players = me->GetMap()->GetPlayers();
 							for (Map::PlayerList::const_iterator itr = players.begin(); itr != players.end(); ++itr)
 							{
-								player = itr->getSource();
-								//if (!player->isGameMaster()) // Not needet in Debug
-								//{
-									me->AI()->AttackStart(player);
-									break;
-								//}
+								AttackPlayerInMap(itr);
+								break;
 							}
                         }
 
@@ -1379,12 +1371,8 @@ class npc_portal_icc : public CreatureScript
 							Map::PlayerList const &players = me->GetMap()->GetPlayers();
 							for (Map::PlayerList::const_iterator itr = players.begin(); itr != players.end(); ++itr)
 							{
-								pPlayer = itr->getSource();
-								//if (!pPlayer->isGameMaster()) // Not needet in Debug
-								//{
-									me->AI()->AttackStart(pPlayer);
-									break;
-								//}
+								AttackPlayerInMap(itr);
+								break;
 							}
                         }
 
