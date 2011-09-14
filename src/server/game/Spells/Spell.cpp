@@ -4932,6 +4932,19 @@ SpellCastResult Spell::CheckCast(bool strict)
             return SPELL_FAILED_DONT_REPORT;
     }
 
+	
+    // Don't check explicit target for passive spells (workaround) (check should be skipped only for learn case)
+    // those spells may have incorrect target entries or not filled at all (for example 15332)
+    // such spells when learned are not targeting anyone using targeting system, they should apply directly to caster instead
+    // also, such casts shouldn't be sent to client
+    if (!((m_spellInfo->Attributes & SPELL_ATTR0_PASSIVE) && !m_targets.GetUnitTarget() || m_targets.GetUnitTarget() == m_caster) || m_caster->isSummon())
+    {
+        // Check explicit target for m_originalCaster - todo: get rid of such workarounds
+        SpellCastResult castResult = m_spellInfo->CheckExplicitTarget(m_originalCaster ? m_originalCaster : m_caster, m_targets.GetObjectTarget(), m_targets.GetItemTarget());
+        if (castResult != SPELL_CAST_OK)
+            return castResult;
+    }
+
     Unit* target = m_targets.GetUnitTarget();
     // In pure self-cast spells, the client won't send any unit target
     if (!target && (m_targets.GetTargetMask() == TARGET_FLAG_SELF || m_targets.GetTargetMask() & TARGET_FLAG_UNIT_ALLY)) // TARGET_FLAG_SELF == 0, remember!
