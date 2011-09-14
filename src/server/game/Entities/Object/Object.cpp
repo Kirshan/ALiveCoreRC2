@@ -1293,6 +1293,12 @@ InstanceScript* WorldObject::GetInstanceScript()
     return map->IsDungeon() ? ((InstanceMap*)map)->GetInstanceScript() : NULL;
 }
 
+InstanceScript* WorldObject::LoadInstanceScript()
+{
+    Map *map = GetMap();
+    return map->IsDungeon() ? ((InstanceMap*)map)->LoadInstanceScript() : NULL;
+}
+
 float WorldObject::GetDistanceZ(const WorldObject* obj) const
 {
     float dz = fabs(GetPositionZ() - obj->GetPositionZ());
