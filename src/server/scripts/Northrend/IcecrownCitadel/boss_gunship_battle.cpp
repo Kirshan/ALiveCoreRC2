@@ -336,8 +336,8 @@ class boss_high_overlord_varok_saurfang : public CreatureScript
 							{
 								case DO_ACTION_BATTLE_START :
 								{
-									uint32 m_ALLIGSTRIGGER = RAID_MODE(NPC_ALLIGSTRIGGER_10, NPC_ALLIGSTRIGGER_25, NPC_ALLIGSTRIGGER_10, NPC_ALLIGSTRIGGER_25);
-                                    uint32 m_HORDEGSTRIGGER = RAID_MODE(NPC_HORDEGSTRIGGER_10, NPC_HORDEGSTRIGGER_25, NPC_HORDEGSTRIGGER_10, NPC_HORDEGSTRIGGER_25);
+									uint32 m_ALLIGSTRIGGER = DIFFICULTY(NPC_ALLIGSTRIGGER_10, NPC_ALLIGSTRIGGER_25, NPC_ALLIGSTRIGGER_10, NPC_ALLIGSTRIGGER_25);
+                                    uint32 m_HORDEGSTRIGGER = DIFFICULTY(NPC_HORDEGSTRIGGER_10, NPC_HORDEGSTRIGGER_25, NPC_HORDEGSTRIGGER_10, NPC_HORDEGSTRIGGER_25);
 
 									if (Creature *m_AlliGS = me->SummonCreature(m_ALLIGSTRIGGER, 18.637676f, 2247.624023f, 527.277039f))
 									{
@@ -349,7 +349,7 @@ class boss_high_overlord_varok_saurfang : public CreatureScript
 										instance->SendEncounterUnit(ENCOUNTER_FRAME_ADD, m_HordeGS);
 									}
 
-									uint32 Count = RAID_MODE(2, 4, 2, 4);
+									uint32 Count = DIFFICULTY(2, 4, 2, 4);
 
 									if (Count == 4)
 									{
@@ -839,7 +839,7 @@ class npc_sergeant : public CreatureScript
 
                                 if( ( me->GetHealth() / me->GetMaxHealth()) <= 0.4) {
                                         if( timer_DesperateResolve <= diff) {
-                                                DoCast( me, RAID_MODE( SPELL_DESPERATE_RESOLVE_10_NM, SPELL_DESPERATE_RESOLVE_25_NM, SPELL_DESPERATE_RESOLVE_10_HM, SPELL_DESPERATE_RESOLVE_25_HM));
+                                                DoCast( me, DIFFICULTY( SPELL_DESPERATE_RESOLVE_10_NM, SPELL_DESPERATE_RESOLVE_25_NM, SPELL_DESPERATE_RESOLVE_10_HM, SPELL_DESPERATE_RESOLVE_25_HM));
                                                 timer_DesperateResolve = 120000;
                                         } else timer_DesperateResolve -= diff;
                                 }
@@ -857,7 +857,7 @@ class npc_sergeant : public CreatureScript
                                 } else timer_BurningPitch -= diff;
 
                                 if( timer_WoundingStrike <= diff) {
-                                        DoCastVictim( RAID_MODE( SPELL_WOUNDING_STRIKE_10_NM, SPELL_WOUNDING_STRIKE_25_NM, SPELL_WOUNDING_STRIKE_10_HM, SPELL_WOUNDING_STRIKE_25_HM));
+                                        DoCastVictim( DIFFICULTY( SPELL_WOUNDING_STRIKE_10_NM, SPELL_WOUNDING_STRIKE_25_NM, SPELL_WOUNDING_STRIKE_10_HM, SPELL_WOUNDING_STRIKE_25_HM));
                                         timer_WoundingStrike = urand( 10000, 12000);
                                 } else timer_WoundingStrike -= diff;
 
@@ -922,7 +922,7 @@ class npc_skybreaker_rifleman : public CreatureScript
                                 } else timer_BurningPitch -= diff;
 
                                 if( timer_Shoot <= diff) {
-                                        DoCastVictim( RAID_MODE( SPELL_SHOOT_10_NM, SPELL_SHOOT_25_NM, SPELL_SHOOT_10_HM, SPELL_SHOOT_25_HM));
+                                        DoCastVictim( DIFFICULTY( SPELL_SHOOT_10_NM, SPELL_SHOOT_25_NM, SPELL_SHOOT_10_HM, SPELL_SHOOT_25_HM));
                                         timer_Shoot = urand( 2000, 4000);
                                 } else timer_Shoot -= diff;
                         }
@@ -983,7 +983,7 @@ class npc_korkron_axethrower : public CreatureScript
                                 } else timer_BurningPitch -= diff;
 
                                 if( timer_HurlAxe <= diff) {
-                                        DoCastVictim( RAID_MODE( SPELL_HURL_AXE_10_NM, SPELL_HURL_AXE_25_NM, SPELL_HURL_AXE_10_HM, SPELL_HURL_AXE_25_HM));
+                                        DoCastVictim( DIFFICULTY( SPELL_HURL_AXE_10_NM, SPELL_HURL_AXE_25_NM, SPELL_HURL_AXE_10_HM, SPELL_HURL_AXE_25_HM));
                                         timer_HurlAxe = urand( 2000, 4000);
                                 } else timer_HurlAxe -= diff;
                         }
@@ -1032,7 +1032,7 @@ class npc_marine_or_reaver : public CreatureScript
                                 
                                 if( ( me->GetHealth() / me->GetMaxHealth()) <= 0.4) {
                                         if( timer_DesperateResolve <= diff) {
-                                                DoCast( me, RAID_MODE( SPELL_DESPERATE_RESOLVE_10_NM, SPELL_DESPERATE_RESOLVE_25_NM, SPELL_DESPERATE_RESOLVE_10_HM, SPELL_DESPERATE_RESOLVE_25_HM));
+                                                DoCast( me, DIFFICULTY( SPELL_DESPERATE_RESOLVE_10_NM, SPELL_DESPERATE_RESOLVE_25_NM, SPELL_DESPERATE_RESOLVE_10_HM, SPELL_DESPERATE_RESOLVE_25_HM));
                                                 timer_DesperateResolve = 120000;
                                         } else timer_DesperateResolve -= diff;
                                 }
@@ -1314,7 +1314,7 @@ class npc_GunShip_healthtrigger : public CreatureScript
 
 						void JustDied(Unit* /*killer*/)
 						{
-							if(me->GetEntry() == RAID_MODE(NPC_HORDEGSTRIGGER_10, NPC_HORDEGSTRIGGER_25, NPC_HORDEGSTRIGGER_10, NPC_HORDEGSTRIGGER_25))
+							if(me->GetEntry() == DIFFICULTY(NPC_HORDEGSTRIGGER_10, NPC_HORDEGSTRIGGER_25, NPC_HORDEGSTRIGGER_10, NPC_HORDEGSTRIGGER_25))
 							{
 								if(pInstance->GetData(DATA_GUNSHIP_EVENT) == true)
 								{
@@ -1325,10 +1325,10 @@ class npc_GunShip_healthtrigger : public CreatureScript
 									pInstance->SetData(DATA_GUNSHIP_EVENT, false);
 								}
 							}
-							if(me->GetEntry() == RAID_MODE(NPC_ALLIGSTRIGGER_10, NPC_ALLIGSTRIGGER_25, NPC_ALLIGSTRIGGER_10, NPC_ALLIGSTRIGGER_25))
+							if(me->GetEntry() == DIFFICULTY(NPC_ALLIGSTRIGGER_10, NPC_ALLIGSTRIGGER_25, NPC_ALLIGSTRIGGER_10, NPC_ALLIGSTRIGGER_25))
 							{
 								pInstance->SetBossState(DATA_GUNSHIP_BATTLE_EVENT, DONE);
-								pInstance->DoCompleteAchievement(RAID_MODE(IM_ON_A_BOAT_10,IM_ON_A_BOAT_25));
+								pInstance->DoCompleteAchievement(DIFFICULTY(IM_ON_A_BOAT_10,IM_ON_A_BOAT_25));
 								pInstance->SetData(DATA_GUNSHIP_EVENT, true);
 							}
 						}
@@ -1371,7 +1371,7 @@ class npc_portal_icc : public CreatureScript
                         void Reset()
                         {
 							SummonTimer = urand(2000, 4000);
-							SummonCount = RAID_MODE(4, 7, 5, 8);
+							SummonCount = DIFFICULTY(4, 7, 5, 8);
 							CurrentCount = 0;
 
 							me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_DISABLE_MOVE | UNIT_FLAG_NON_ATTACKABLE | UNIT_FLAG_OOC_NOT_ATTACKABLE | UNIT_FLAG_NOT_SELECTABLE);

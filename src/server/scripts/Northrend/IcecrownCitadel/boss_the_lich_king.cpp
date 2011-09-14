@@ -1,6 +1,8 @@
 /*
  * Copyright (C) 2008-2011 TrinityCore <http://www.trinitycore.org/>
  *
+ * Copyright (C) 2011-2012 ALiveCore <http://www.wow-alive.de/>
+ *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
  * Free Software Foundation; either version 2 of the License, or (at your
@@ -526,10 +528,10 @@ class boss_the_lich_king : public CreatureScript
 				instance->SetData(DATA_THE_LICH_KING, DONE);
 
                 if (instance->GetData(DATA_BEEN_WAITING_ACHIEVEMENT) == DONE)
-                    instance->DoCompleteAchievement(RAID_MODE(ACHIEV_BEEN_WAITING_A_LONG_TIME_FOR_THIS_10,ACHIEV_BEEN_WAITING_A_LONG_TIME_FOR_THIS_25));
+                    instance->DoCompleteAchievement(DIFFICULTY(ACHIEV_BEEN_WAITING_A_LONG_TIME_FOR_THIS_10,ACHIEV_BEEN_WAITING_A_LONG_TIME_FOR_THIS_25));
 
                 if (instance->GetData(DATA_NECK_DEEP_ACHIEVEMENT) == DONE)
-                    instance->DoCompleteAchievement(RAID_MODE(ACHIEV_NECK_DEEP_IN_VILE_10,ACHIEV_NECK_DEEP_IN_VILE_25));
+                    instance->DoCompleteAchievement(DIFFICULTY(ACHIEV_NECK_DEEP_IN_VILE_10,ACHIEV_NECK_DEEP_IN_VILE_25));
 
                 Cleanup();
 
@@ -733,7 +735,7 @@ class boss_the_lich_king : public CreatureScript
                         }
 
                         me->SetReactState(REACT_AGGRESSIVE);
-                        me->RemoveAurasDueToSpell(RAID_MODE<uint32>(SPELL_PAIN_AND_SUFFERING_10N, SPELL_PAIN_AND_SUFFERING_25N, SPELL_PAIN_AND_SUFFERING_10H, SPELL_PAIN_AND_SUFFERING_25H));
+                        me->RemoveAurasDueToSpell(DIFFICULTY<uint32>(SPELL_PAIN_AND_SUFFERING_10N, SPELL_PAIN_AND_SUFFERING_25N, SPELL_PAIN_AND_SUFFERING_10H, SPELL_PAIN_AND_SUFFERING_25H));
                         DoZoneInCombat(me);
                         SetCombatMovement(true);
                         me->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE | UNIT_FLAG_OOC_NOT_ATTACKABLE);
@@ -924,7 +926,7 @@ class boss_the_lich_king : public CreatureScript
                                     if (Player* randomPlayer = SelectRandomAttackablePlayerInTheMap(me->GetMap()))
                                     {
                                         me->SetFacingToObject(randomPlayer);
-                                        DoCast(randomPlayer, RAID_MODE<uint32>(SPELL_PAIN_AND_SUFFERING_10N, SPELL_PAIN_AND_SUFFERING_25N, SPELL_PAIN_AND_SUFFERING_10H, SPELL_PAIN_AND_SUFFERING_25H), true);
+                                        DoCast(randomPlayer, DIFFICULTY<uint32>(SPELL_PAIN_AND_SUFFERING_10N, SPELL_PAIN_AND_SUFFERING_25N, SPELL_PAIN_AND_SUFFERING_10H, SPELL_PAIN_AND_SUFFERING_25H), true);
                                     }
 
                                     events.ScheduleEvent(EVENT_PAIN_AND_SUFFERING, 1500, 0, GetPhase(events));
@@ -961,7 +963,7 @@ class boss_the_lich_king : public CreatureScript
                                         DoCast(target, SPELL_SUMMON_RAGING_SPIRIT);
 
                                     events.RescheduleEvent(EVENT_PAIN_AND_SUFFERING, 3000, 0, PHASE_2_TRANSITION);
-                                    events.ScheduleEvent(EVENT_SUMMON_RAGING_SPIRIT, RAID_MODE<uint32>(20000, 15000, 20000, 15000), 0, GetPhase(events));
+                                    events.ScheduleEvent(EVENT_SUMMON_RAGING_SPIRIT, DIFFICULTY<uint32>(20000, 15000, 20000, 15000), 0, GetPhase(events));
                                     break;
                                 }
                                 case EVENT_SUMMON_ICE_SPHERE:
