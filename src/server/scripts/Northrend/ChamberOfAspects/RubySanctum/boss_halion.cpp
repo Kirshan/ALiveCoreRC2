@@ -352,11 +352,19 @@ public:
 						{
 							if (!pCurrent->HasAura(SPELL_FIERY_COMBUSTION))
 								if (pCurrent->HasAura(SPELL_MARK_OF_COMBUSTION))
+								{
 									me->SummonCreature(NPC_COMBUSTION, pCurrent->GetPositionX(), pCurrent->GetPositionY(), pCurrent->GetPositionZ());
+									//debug message
+									me->MonsterYell("FIERY_COMBUSTION Target Found %s", LANG_UNIVERSAL, 0), pCurrent;
+								}
 
 							if (!pCurrent->HasAura(SPELL_SOUL_CONSUMPTION))
 								if (pCurrent->HasAura(SPELL_MARK_OF_CONSUMPTION))
+								{
 									me->SummonCreature(NPC_CONSUMPTION, pCurrent->GetPositionX(), pCurrent->GetPositionY(), pCurrent->GetPositionZ());
+									//debug message
+									me->MonsterYell("SOUL_CONSUMPTION Target Found %s", LANG_UNIVERSAL, 0), pCurrent;
+								}
 						}
 					}
 					m_uiCheckTimer = 700;
