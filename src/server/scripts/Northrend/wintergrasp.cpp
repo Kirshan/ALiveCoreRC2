@@ -82,6 +82,7 @@ bool OnGossipSelect(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint3
         npc_demolisher_engineererAI(Creature* pCreature) : ScriptedAI(pCreature)
         {
             me->SetReactState(REACT_PASSIVE);
+			me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
         }
     };
 
