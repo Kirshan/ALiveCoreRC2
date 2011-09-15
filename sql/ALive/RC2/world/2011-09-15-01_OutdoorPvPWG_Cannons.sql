@@ -11,7 +11,7 @@ UPDATE `creature_template` SET `unit_flags` = '32772' WHERE `entry` = '28366';		
 UPDATE `creature_template` SET `InhabitType` = '5' WHERE `entry` = '28366';			-- Avoid npc can fall under GameObject
 
 -- Add Spell
-UPDATE `creature_template` SET `spellt 1` = '51421' WHERE `entry` = '28366';			-- Fire Cannon
+UPDATE `creature_template` SET `spell1` = '51421' WHERE `entry` = '28366';			-- Fire Cannon
 
 -- Spawn Cannons
 /*!40101 SET NAMES utf8 */;
