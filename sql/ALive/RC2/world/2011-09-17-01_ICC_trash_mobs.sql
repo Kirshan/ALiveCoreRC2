@@ -199,7 +199,7 @@ INSERT INTO `creature_ai_scripts` VALUES
 -- Die Verdammten
 DELETE FROM `creature_ai_scripts` WHERE (`creature_id`='37011');
 INSERT INTO `creature_ai_scripts` VALUES 
-('3701101', '37011', '0', '6', '100', '31', '10000', '14000', '10000', '14000', '11', '70960', '0', '1', '', '', '', '', '', '', '', '', 'The Damned - Bone Flurry'),
+('3701101', '37011', '0', '6', '100', '31', '10000', '14000', '10000', '14000', '11', '70960', '0', '0', '', '', '', '', '', '', '', '', 'The Damned - Bone Flurry'),
 ('3701102', '37011', '6', '6', '100', '31', '', '', '', '', '11', '70961', '0', '1', '', '', '', '', '', '', '', '', 'The Damned - Shattered Bones');
 
 -- Use AI
