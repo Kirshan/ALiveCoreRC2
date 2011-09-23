@@ -744,6 +744,12 @@ public:
             switch (type)
             {
                 case TYPE_LEVIATHAN:
+					for (std::list<uint64>::iterator i = uiLeviathanDoorGUIDList.begin(); i != uiLeviathanDoorGUIDList.end(); i++)
+					{
+						if (GameObject* obj = instance->GetGameObject(*i))
+							obj->SetGoState(state == IN_PROGRESS ? GO_STATE_READY : GO_STATE_ACTIVE );
+					}
+					break;
                 case TYPE_IGNIS:
                 case TYPE_RAZORSCALE:
                 case TYPE_AURIAYA:
