@@ -66,6 +66,7 @@ enum Spells
     SPELL_ROCKET_STRIKE_AURA                    = 64064,
     SPELL_ROCKET_STRIKE_DMG                     = 63041,
     SPELL_SPINNING_UP                           = 63414,
+	SPELL_P3WX2_LASER_BARRAGE					= 63274,
     SPELL_HEAT_WAVE                             = 63677,
     SPELL_HAND_PULSE                            = 64348,
 
@@ -107,6 +108,7 @@ enum Events
     // VX-001
     EVENT_RAPID_BURST,
     EVENT_LASER_BARRAGE,
+	EVENT_LASER_BARRAGE_SHOOT,
     EVENT_LASER_BARRAGE_END,
     EVENT_ROCKET_STRIKE,
     EVENT_HEAT_WAVE,
@@ -1238,8 +1240,13 @@ public:
                             DoCast(SPELL_SPINNING_UP);
                             events.DelayEvents(14500);
                             events.RescheduleEvent(EVENT_LASER_BARRAGE, 40000);
+							events.RescheduleEvent(EVENT_LASER_BARRAGE_SHOOT, 4000);
                             events.RescheduleEvent(EVENT_LASER_BARRAGE_END, 14000);
                             break;
+						case EVENT_LASER_BARRAGE_SHOOT:
+							DoCast(SPELL_P3WX2_LASER_BARRAGE);
+							events.RescheduleEvent(EVENT_LASER_BARRAGE_SHOOT, 400000000);
+							break;
                         case EVENT_LASER_BARRAGE_END:
                             me->SetReactState(REACT_AGGRESSIVE);
                             AttackStart(me->getVictim());
