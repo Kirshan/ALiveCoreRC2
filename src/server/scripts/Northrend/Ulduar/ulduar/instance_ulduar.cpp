@@ -21,11 +21,11 @@
 #include "ObjectMgr.h"
 #include "ulduar.h"
 
-static DoorData const doorData[] =
+/*static DoorData const doorData[] =
 {
     { GO_LEVIATHAN_DOOR, TYPE_LEVIATHAN, DOOR_TYPE_ROOM, BOUNDARY_S    },
     { 0,                 0,              DOOR_TYPE_ROOM, BOUNDARY_NONE },
-};
+};*/
 
 class instance_ulduar : public InstanceMapScript
 {
@@ -559,6 +559,7 @@ public:
                    break;
                 case GO_LEVIATHAN_DOOR:
                     AddDoor(go, true);
+					uiLeviathanDoorGUIDList.push_back(go->GetGUID());
                     break;
                 case GO_LEVIATHAN_GATE:
                     uiLeviathanGateGUID = go->GetGUID();
@@ -747,7 +748,7 @@ public:
 					for (std::list<uint64>::iterator i = uiLeviathanDoorGUIDList.begin(); i != uiLeviathanDoorGUIDList.end(); i++)
 					{
 						if (GameObject* obj = instance->GetGameObject(*i))
-							obj->SetGoState(state == IN_PROGRESS ? GO_STATE_READY : GO_STATE_ACTIVE );
+							obj->SetGoState(state == IN_PROGRESS ? GO_STATE_READY : GO_STATE_ACTIVE);
 					}
 					break;
                 case TYPE_IGNIS:
